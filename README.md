@@ -137,8 +137,11 @@ to the fitter. One can handle complex flags with a cut string (root cut string):
 ## How to do cut and count    
 
 > python tnpEGM_fitter.py etc/config/settings_et_Ele23_leg.py --flag passingHLT  --checkBins
+
 > python tnpEGM_fitter.py etc/config/settings_et_Ele23_leg.py --flag passingHLT  --createBins
+
 > python tnpEGM_fitter.py etc/config/settings_et_Ele23_leg.py --flag passingHLT  --createHists
+
 > python tnpEGM_fitter.py etc/config/settings_et_Ele23_leg.py --flag passingHLT  --doCutCount
 
 #### adding remote (Fabrice version)
