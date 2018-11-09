@@ -133,7 +133,8 @@ to the fitter. One can handle complex flags with a cut string (root cut string):
     Define in this section the init parameters for the different fit, can be tuned to improve convergence.
 
 ====================
-   
+
+## How to do cut and count    
 
 
 #### adding remote (Fabrice version)
