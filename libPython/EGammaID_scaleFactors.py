@@ -307,8 +307,8 @@ def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
     fileWithEff.close()
 
 ### massage the numbers a bit
-    effGraph.symmetrizeSystVsEta()
-    effGraph.combineSyst()
+    #effGraph.symmetrizeSystVsEta()
+    #effGraph.combineSyst()
 
     print " ------------------------------- "
 
