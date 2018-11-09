@@ -136,6 +136,7 @@ to the fitter. One can handle complex flags with a cut string (root cut string):
 
 ## How to do cut and count    
 
+> python tnpEGM_fitter.py etc/config/settings_et_Ele23_leg.py --flag passingHLT  --doCutCount
 
 #### adding remote (Fabrice version)
 git remote add origin git@github.com:fcouderc/egm_tnp_analysis.git
