@@ -349,7 +349,7 @@ def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', 
         grBinsSF      = effUtil.makeTGraphFromList(sfList[key]     , 'min', 'max')
         grBinsEffMC = None
         if not effMCList is None:
-            grBinsEffMC = effUtil.makeTGraphFromList(effMCList[key], 'min', 'max')
+            grBinsEffMC = effUtil.makeTGraphFromList(effMCList[key], 'min', 'max') # all errors are included in data points
             grBinsEffMC.SetLineStyle( rt.kDashed )
             grBinsEffMC.SetLineColor( graphColors[igr] )
             grBinsEffMC.SetMarkerSize( 0 )
