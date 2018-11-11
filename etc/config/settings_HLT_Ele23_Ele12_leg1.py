@@ -23,10 +23,10 @@ tnpTreeDir = 'tnpEleTrig' # tree name of the input root files
 samplesDef = {
     'data'   : tnpSamples.Moriond17_80X_HN_leg1['data_Run2016H'].clone(),
     'mcNom'  : tnpSamples.Moriond17_80X_HN_leg1['DY_madgraph_Winter17'].clone(),
-    #'mcAlt'  : tnpSamples.Moriond17_80X_HN_leg1['DY_amcatnlo_Winter17'].clone(),
-    #'tagSel' : tnpSamples.Moriond17_80X_HN_leg1['DY_madgraph_Winter17'].clone(),
-    'mcAlt'  : None,
-    'tagSel' : None,
+    'mcAlt'  : tnpSamples.Moriond17_80X_HN_leg1['DY_amcatnlo_Winter17'].clone(),
+    'tagSel' : tnpSamples.Moriond17_80X_HN_leg1['DY_madgraph_Winter17'].clone(),
+    #'mcAlt'  : None,
+    #'tagSel' : None,
 }
 ## can add data sample easily
 #samplesDef['data'].add_sample( tnpSamples.HLT_DoubleEle25_CaloIdL_MW_v2['data_Run2017F'] )
@@ -37,12 +37,12 @@ samplesDef = {
 ## all the samples MUST have different names (i.e. sample.name must be different for all)
 ## if you need to use 2 times the same sample, then rename the second one
 
-#samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016G'] )
-#samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016F'] )
-#samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016E'] )
-#samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016D'] )
-#samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016C'] )
-#samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016B'] )
+samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016G'] )
+samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016F'] )
+samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016E'] )
+samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016D'] )
+samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016C'] )
+samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016B'] )
 
 if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_mcTruth()
 if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_mcTruth()
@@ -88,11 +88,21 @@ additionalCuts = {
     6 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
     7 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
     8 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
-    9 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45'
+    9 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    10 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    11 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    12 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    13 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    14 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    15 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    16 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    17 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    18 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
+    19 : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45',
 }
 
 #### or remove any additional cut (default)
-additionalCuts = None
+#additionalCuts = None
 
 #############################################################
 ########## fitting params to tune fit by hand if necessary

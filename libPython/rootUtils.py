@@ -79,8 +79,6 @@ def makePassFailHistograms( sample, flag, bindef, var ):
     outfile.Close()
 
 
-
-
 def histPlotter( filename, tnpBin, plotDir ):
     print 'opening ', filename
     print '  get canvas: ' , '%s_Canv' % tnpBin['name']
@@ -105,7 +103,7 @@ def computeEffi_cnc( n1,n2,e1,e2):
     effout = []
     eff   = n1/(n1+n2)
 
-    if eff < 0.001 : eff = 0.001
+    if eff < 0.001 : eff = 0.001 # just to avoid dividing zero
 
     e_eff = 1/(n1+n2)*math.sqrt(e1*e1*n2*n2+e2*e2*n1*n1)/(n1+n2)
     if e_eff < 0.001 : e_eff = 0.001
@@ -115,6 +113,36 @@ def computeEffi_cnc( n1,n2,e1,e2):
 
     return effout
 
+# https://root.cern.ch/doc/master/TGraphAsymmErrors_8cxx_source.html#l00573 (Line 858)
+# use Divide function in TGraphAsymErrors 
+def computeEffiAsymError_cnc(n1,n2,e1,e2):
+    effout = []
+
+    # temporary histograms for nominator and denominator
+    htemp_nom=rt.TH1D("temp_nom", "temp_nom", 1, 0., 1.)
+    htemp_denom=rt.TH1D("temp_denom", "temp_denom", 1, 0., 1.)
+
+    htemp_nom.SetBinContent(1, n1)
+    htemp_nom.SetBinError(1, e1)
+
+    htemp_denom.SetBinContent(1, n1+n2)
+    htemp_denom.SetBinError(1, math.sqrt(e1*e1+e2*e2))
+
+    grEff = rt.TGraphAsymmErrors(htemp_nom,htemp_denom,"cl=0.683 b(1,1) mode")
+
+    eff_ = grEff.GetY()
+    eff = eff_[0]
+    high = grEff.GetErrorYhigh(0)
+    low = grEff.GetErrorYlow(0)
+
+    if eff < 1e-6: eff = 1e-6 # just to avoid zero in denominator
+
+    effout.append(eff)
+    effout.append((low+high))
+    effout.append(low)
+    effout.append(high)
+    
+    return effout
 
 import os.path
 def getAllEffi( info, bindef ):
@@ -352,6 +380,131 @@ def getAllCnCEffi( info, bindef ):
         rootfile.Close()
     else: effis['mcAlt'] = [-1,-1]
 
-
     return effis
 
+def getAllCnCEffiAsymError( info, bindef ):
+    effis = {}
+    if not info['mcNominal'] is None and os.path.isfile(info['mcNominal']):
+        rootfile = rt.TFile( info['mcNominal'], 'read' )
+        hP = rootfile.Get('%s_Pass'%bindef['name'])
+        hF = rootfile.Get('%s_Fail'%bindef['name'])
+        bin1 = 1
+        bin2 = hP.GetXaxis().GetNbins()
+        eP = rt.Double(-1.0)
+        eF = rt.Double(-1.0)
+        nP = hP.IntegralAndError(bin1,bin2,eP)
+        nF = hF.IntegralAndError(bin1,bin2,eF)
+
+        #nPsumw2 = 0
+        #nFsumw2 = 0
+        #for i in range(1, hP.GetSumw2().fN -1): # exclude under/over flow bins
+        #    nPsumw2 += hP.GetSumw2().At(i)
+        #    nFsumw2 += hF.GetSumw2().At(i)
+
+        #effis['mcNominal'] = computeEffiAsymError_cnc(nP,nF,nPsumw2,nFsumw2)
+        effis['mcNominal'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
+        rootfile.Close()
+    else: effis['mcNominal'] = [-1,-1]
+
+    if not info['dataNominal'] is None and os.path.isfile(info['dataNominal']):
+        rootfile = rt.TFile( info['dataNominal'], 'read' )
+        hP = rootfile.Get('%s_Pass'%bindef['name'])
+        hF = rootfile.Get('%s_Fail'%bindef['name'])
+        bin1 = 1
+        bin2 = hP.GetXaxis().GetNbins()
+        eP = rt.Double(-1.0)
+        eF = rt.Double(-1.0)
+        nP = hP.IntegralAndError(bin1,bin2,eP)
+        nF = hF.IntegralAndError(bin1,bin2,eF)
+
+        #nPsumw2 = 0
+        #nFsumw2 = 0
+        #for i in range(1, hP.GetSumw2().fN -1): # exclude under/over flow bins
+        #    nPsumw2 += hP.GetSumw2().At(i)
+        #    nFsumw2 += hF.GetSumw2().At(i)
+
+        #effis['dataNominal'] = computeEffiAsymError_cnc(nP,nF,nPsumw2,nFsumw2)
+        effis['dataNominal'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
+        rootfile.Close()
+    else: effis['dataNominal'] = [-1,-1]
+
+    if not info['dataAltBkg'] is None and os.path.isfile(info['dataAltBkg']):
+        rootfile = rt.TFile( info['dataAltBkg'], 'read' )
+        from ROOT import RooFit,RooFitResult
+        fitresP = rootfile.Get( '%s_resP' % bindef['name']  )
+        fitresF = rootfile.Get( '%s_resF' % bindef['name'] )
+
+        nP = fitresP.floatParsFinal().find('nSigP').getVal()
+        nF = fitresF.floatParsFinal().find('nSigF').getVal()
+        eP = fitresP.floatParsFinal().find('nSigP').getError()
+        eF = fitresF.floatParsFinal().find('nSigF').getError()
+        rootfile.Close()
+
+        rootfile = rt.TFile( info['data'], 'read' )
+        hP = rootfile.Get('%s_Pass'%bindef['name'])
+        hF = rootfile.Get('%s_Fail'%bindef['name'])
+
+        if eP > math.sqrt(hP.Integral()) : eP = math.sqrt(hP.Integral())
+        if eF > math.sqrt(hF.Integral()) : eF = math.sqrt(hF.Integral())
+        rootfile.Close()
+
+        effis['dataAltBkg'] = computeEffi_cnc(nP,nF,eP,eF)
+    else:
+        effis['dataAltBkg'] = [-1,-1]
+
+    if not info['dataAltSig'] is None and os.path.isfile(info['dataAltSig']) :
+        rootfile = rt.TFile( info['dataAltSig'], 'read' )
+        from ROOT import RooFit,RooFitResult
+        fitresP = rootfile.Get( '%s_resP' % bindef['name']  )
+        fitresF = rootfile.Get( '%s_resF' % bindef['name'] )
+
+        nP = fitresP.floatParsFinal().find('nSigP').getVal()
+        nF = fitresF.floatParsFinal().find('nSigF').getVal()
+        eP = fitresP.floatParsFinal().find('nSigP').getError()
+        eF = fitresF.floatParsFinal().find('nSigF').getError()
+        rootfile.Close()
+
+        rootfile = rt.TFile( info['data'], 'read' )
+        hP = rootfile.Get('%s_Pass'%bindef['name'])
+        hF = rootfile.Get('%s_Fail'%bindef['name'])
+
+        if eP > math.sqrt(hP.Integral()) : eP = math.sqrt(hP.Integral())
+        if eF > math.sqrt(hF.Integral()) : eF = math.sqrt(hF.Integral())
+        rootfile.Close()
+
+        effis['dataAltSig'] = computeEffi_cnc(nP,nF,eP,eF)
+
+    else:
+        effis['dataAltSig'] = [-1,-1]
+
+    if not info['tagSel'] is None and os.path.isfile(info['tagSel']):
+        rootfile = rt.TFile( info['tagSel'], 'read' )
+        hP = rootfile.Get('%s_Pass'%bindef['name'])
+        hF = rootfile.Get('%s_Fail'%bindef['name'])
+        bin1 = 1
+        bin2 = hP.GetXaxis().GetNbins()
+        eP = rt.Double(-1.0)
+        eF = rt.Double(-1.0)
+        nP = hP.IntegralAndError(bin1,bin2,eP)
+        nF = hF.IntegralAndError(bin1,bin2,eF)
+
+        effis['tagSel'] = computeEffi_cnc(nP,nF,eP,eF)
+        rootfile.Close()
+    else: effis['tagSel'] = [-1,-1]
+
+    if not info['mcAlt'] is None and os.path.isfile(info['mcAlt']):
+        rootfile = rt.TFile( info['mcAlt'], 'read' )
+        hP = rootfile.Get('%s_Pass'%bindef['name'])
+        hF = rootfile.Get('%s_Fail'%bindef['name'])
+        bin1 = 1
+        bin2 = hP.GetXaxis().GetNbins()
+        eP = rt.Double(-1.0)
+        eF = rt.Double(-1.0)
+        nP = hP.IntegralAndError(bin1,bin2,eP)
+        nF = hF.IntegralAndError(bin1,bin2,eF)
+
+        effis['mcAlt'] = computeEffi_cnc(nP,nF,eP,eF)
+        rootfile.Close()
+    else: effis['mcAlt'] = [-1,-1]
+
+    return effis

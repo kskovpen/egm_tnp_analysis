@@ -96,9 +96,9 @@ if args.createHists:
         if sampleType == args.sample or args.sample == 'all' :
             print 'creating histogram for sample '
             sample.dump()
-            var = { 'name' : 'pair_mass', 'nbins' : 80, 'min' : 50, 'max': 130 }
+            var = { 'name' : 'pair_mass', 'nbins' : 60, 'min' : 60, 'max': 120 }
             if sample.mcTruth:
-                var = { 'name' : 'pair_mass', 'nbins' : 80, 'min' : 50, 'max': 130 }
+                var = { 'name' : 'pair_mass', 'nbins' : 60, 'min' : 60, 'max': 120 }
             tnpRoot.makePassFailHistograms( sample, tnpConf.flags[args.flag], tnpBins, var )
 
     sys.exit(0)
@@ -251,8 +251,8 @@ if args.doCutCount:
     fOut = open( effFileName,'w')
     
     for ib in range(len(tnpBins['bins'])):
-        #effis = tnpRoot.getAllEffi( info, tnpBins['bins'][ib] )
-        effis = tnpRoot.getAllCnCEffi( info, tnpBins['bins'][ib] )
+        #effis = tnpRoot.getAllCnCEffi( info, tnpBins['bins'][ib] )
+        effis = tnpRoot.getAllCnCEffiAsymError( info, tnpBins['bins'][ib] )
 
         ### formatting assuming 2D bining -- to be fixed        
         v1Range = tnpBins['bins'][ib]['title'].split(';')[1].split('<')
@@ -265,11 +265,11 @@ if args.doCutCount:
             print astr
             fOut.write( astr + '\n' )
             
-        astr =  '%+8.3f\t%+8.3f\t%+8.3f\t%+8.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f' % (
+        astr =  '%+8.3f\t%+8.3f\t%+8.3f\t%+8.3f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.3f\t%5.3f\t%5.3f\t%5.3f' % (
             float(v1Range[0]), float(v1Range[2]),
             float(v2Range[0]), float(v2Range[2]),
-            effis['dataNominal'][0],effis['dataNominal'][1],
-            effis['mcNominal'  ][0],effis['mcNominal'  ][1],
+            effis['dataNominal'][0],effis['dataNominal'][1],effis['dataNominal'][2],effis['dataNominal'][3],
+            effis['mcNominal'  ][0],effis['mcNominal'  ][1],effis['mcNominal'  ][2],effis['mcNominal'  ][3],
             effis['dataAltBkg' ][0],
             effis['dataAltSig' ][0],
             effis['mcAlt' ][0],

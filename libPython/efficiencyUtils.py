@@ -17,13 +17,17 @@ class efficiency:
         self.altEff  = [-1]*7
         self.syst    = [-1]*7
     
-    def __init__(self,ptBin,etaBin,effData,errEffData,effMC,errEffMC,effAltBkgModel,effAltSigModel,effAltMCSignal,effAltTagSel):
+    def __init__(self,ptBin,etaBin,effData,errEffData,errlowEffData, errhighEffData, effMC,errEffMC,errlowEffMC, errhighEffMC, effAltBkgModel,effAltSigModel,effAltMCSignal,effAltTagSel):
         self.ptBin      = ptBin
         self.etaBin     = etaBin
         self.effData    = effData
         self.effMC      = effMC
         self.errEffData = errEffData        
+        self.errlowEffData = errlowEffData        
+        self.errhighEffData = errhighEffData        
         self.errEffMC   = errEffMC
+        self.errlowEffMC   = errlowEffMC
+        self.errhighEffMC   = errhighEffMC
         self.altEff = [-1]*7
         self.syst   = [-1]*9
         self.altEff[self.iAltBkgModel] = effAltBkgModel
@@ -32,9 +36,9 @@ class efficiency:
         self.altEff[self.iAltTagSelec] = effAltTagSel
 
     def __str__(self):
-        return '%2.3f\t%2.3f\t%2.1f\t%2.1f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f' % (self.etaBin[0],self.etaBin[1],
+        return '%2.3f\t%2.3f\t%2.1f\t%2.1f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f\t%2.4f' % (self.etaBin[0],self.etaBin[1],
                                                                                                        self.ptBin[0] ,self.ptBin[1] ,
-                                                                                                       self.effData, self.errEffData, self.effMC, self.errEffMC,
+                                                                                                       self.effData, self.errEffData, self.errlowEffData, self.errhighEffData,self.effMC, self.errEffMC, self.errlowEffMC, self.errhighEffMC,
                                                                                                        self.altEff[0],self.altEff[1], self.altEff[2], self.altEff[3] )
 
     @staticmethod
@@ -70,10 +74,26 @@ class efficiency:
         self.syst[self.iAltTagSelec+2] = systAltTagSelec
         
         self.systCombined = 0
+        self.systlowCombined = 0
+        self.systhighCombined = 0
         for isyst in range(6):
             self.systCombined += self.syst[isyst]*self.syst[isyst];
+            if isyst ==0 :
+               self.systlowCombined += self.errlowEffData * self.errlowEffData
+               self.systhighCombined += self.errhighEffData * self.errhighEffData
+
+            elif isyst ==1 :
+               self.systlowCombined += self.errlowEffMC * self.errlowEffMC
+               self.systhighCombined += self.errhighEffMC * self.errhighEffMC
+               
+            else :
+               self.systlowCombined += (self.syst[isyst]/2)*(self.syst[isyst]/2)
+               self.systhighCombined += (self.syst[isyst]/2)*(self.syst[isyst]/2)
+              
 
         self.systCombined = math.sqrt(self.systCombined)
+        self.systlowCombined = math.sqrt(self.systlowCombined)
+        self.systhighCombined = math.sqrt(self.systhighCombined)
         
 
     def __add__(self,eff):
@@ -89,19 +109,26 @@ class efficiency:
         wData2   = 1.0 / (eff .errEffData * eff .errEffData) * errData2
         newEffData      = wData1 * self.effData + wData2 * eff.effData;
         newErrEffData   = math.sqrt(errData2)
+
+        errlowData2 = 1.0 / (1.0/(self.errlowEffData*self.errlowEffData)+1.0/(eff.errlowEffData*eff.errlowEffData))
+        errhighData2 = 1.0 / (1.0/(self.errhighEffData*self.errhighEffData)+1.0/(eff.errhighEffData*eff.errhighEffData))
+        newlowErrEffData = math.sqrt(errlowData2)
+        newhighErrEffData = math.sqrt(errhighData2)
         
         #        errMC2 = 1.0 / (1.0/(self.errEffMC*self.errEffMC)+1.0/(eff.errEffMC*eff.errEffMC))
         #wMC1   = 1.0 / (self.errEffMC * self.errEffMC) * errMC2
         #wMC2   = 1.0 / (eff .errEffMC * eff .errEffMC) * errMC2
         newEffMC      = wData1 * self.effMC + wData2 * eff.effMC;
         newErrEffMC   = 0.00001#math.sqrt(errMC2)
+        newlowErrEffMC   = 0.00001#math.sqrt(errMC2)
+        newhighErrEffMC   = 0.00001#math.sqrt(errMC2)
 
         newEffAltBkgModel = wData1 * self.altEff[self.iAltBkgModel] + wData2 * eff.altEff[self.iAltBkgModel]
         newEffAltSigModel = wData1 * self.altEff[self.iAltSigModel] + wData2 * eff.altEff[self.iAltSigModel]
         newEffAltMCSignal = wData1 * self.altEff[self.iAltMCSignal] + wData2 * eff.altEff[self.iAltMCSignal]
         newEffAltTagSelec = wData1 * self.altEff[self.iAltTagSelec] + wData2 * eff.altEff[self.iAltTagSelec]
 
-        effout = efficiency(ptbin,etabin,newEffData,newErrEffData,newEffMC,newErrEffMC,newEffAltBkgModel,newEffAltSigModel,newEffAltMCSignal,newEffAltTagSelec)
+        effout = efficiency(ptbin,etabin,newEffData,newErrEffData,newlowErrEffData, newhighErrEffData,newEffMC,newErrEffMC,newlowErrEffMC, newhighErrEffMC,newEffAltBkgModel,newEffAltSigModel,newEffAltMCSignal,newEffAltTagSelec)
         return effout
     
 
@@ -123,6 +150,23 @@ def makeTGraphFromList( listOfEfficiencies , keyMin, keyMax ):
     #    grOut.Print()
     return grOut
 
+def makeTGraphAsymErrorFromList( listOfEfficiencies , keyMin, keyMax ):
+    grOut = rt.TGraphAsymmErrors(len(listOfEfficiencies))
+
+    ip = 0
+    for point in listOfEfficiencies:
+        grOut.SetPoint(     ip, (point[keyMin]+point[keyMax])/2. , point['val'] )
+        exh = point[keyMax] - (point[keyMin]+point[keyMax])/2
+        exl = (point[keyMin]+point[keyMax])/2 - point[keyMin]
+        eyh = point['errhigh']
+        eyl = point['errlow']
+        grOut.SetPointError(ip, exl, exh, eyl, eyh )
+        ip = ip + 1
+
+    #    print "###########################"
+    #    print listOfEff
+    #    grOut.Print()
+    return grOut
 
 
 class efficiencyList: 
@@ -352,6 +396,48 @@ class efficiencyList:
                                                   
         return listOfGraphs
 
+    def pt_1DGraphAsymError_list(self, doScaleFactor):
+#        self.symmetrizeSystVsEta()
+        self.combineSyst()
+        listOfGraphs = {}
+
+
+        for ptBin in self.effList.keys():
+            for etaBin in self.effList[ptBin].keys():
+                if etaBin[0] >= 0 and etaBin[1] > 0:
+                    etaBinPlus  = etaBin
+                    etaBinMinus = (-etaBin[1],-etaBin[0])
+
+                    effPlus  = self.effList[ptBin][etaBinPlus]
+                    effMinus = None
+                    if self.effList[ptBin].has_key(etaBinMinus):
+                        effMinus =  self.effList[ptBin][etaBinMinus]
+
+                    effAverage = effPlus
+                    if not effMinus is None:
+                        effAverage = effPlus + effMinus
+
+
+                    if not listOfGraphs.has_key(etaBin):
+                        ### init average efficiency 
+                        listOfGraphs[etaBin] = []
+
+                    effAverage.combineSyst(effAverage.effData,effAverage.effMC)
+                    aValue  = effAverage.effData
+                    anErrorLow = effAverage.systlowCombined
+                    anErrorHigh = effAverage.systhighCombined
+
+                    listOfGraphs[etaBin].append( {'min': ptBin[0], 'max': ptBin[1],
+                                                  'val': aValue  , 'errhigh': anErrorHigh, 'errlow': anErrorLow } )
+                    if doScaleFactor :
+                        aValue  = effAverage.effData      / effAverage.effMC
+                        anError = effAverage.systCombined / effAverage.effMC
+
+                        listOfGraphs[etaBin].append( {'min': ptBin[0], 'max': ptBin[1],
+                                                      'val': aValue  , 'err': anError} )
+
+        return listOfGraphs
+
     def pt_1DGraph_list_customEtaBining(self, etaBining, doScaleFactor):
 #        self.symmetrizeSystVsEta()
         self.combineSyst()
@@ -416,6 +502,37 @@ class efficiencyList:
 
         return listOfGraphs
 
+    def eta_1DGraphAsymError_list(self, typeGR = 0 ):
+#        self.symmetrizeSystVsEta()
+        self.combineSyst()
+        listOfGraphs = {}
+
+        for ptBin in self.effList.keys():
+            for etaBin in self.effList[ptBin].keys():
+                if not listOfGraphs.has_key(ptBin):
+                    ### init average efficiency 
+                    listOfGraphs[ptBin] = []
+                effAverage = self.effList[ptBin][etaBin]
+                aValue  = effAverage.effData
+                #anError = effAverage.systCombined
+                anErrorLow = effAverage.systlowCombined
+                anErrorHigh = effAverage.systhighCombined
+
+                if typeGR == 0:
+                   listOfGraphs[ptBin].append( {'min': etaBin[0], 'max': etaBin[1],
+                                              'val': aValue  , 'errhigh': anErrorHigh, 'errlow': anErrorLow } )
+                if typeGR == 1:
+                    aValue  = effAverage.effData      / effAverage.effMC
+                    anError = effAverage.systCombined / effAverage.effMC
+                    listOfGraphs[ptBin].append( {'min': etaBin[0], 'max': etaBin[1],
+                                                  'val': aValue  , 'err': anError} )
+                if typeGR == -1:
+                    aValue  = effAverage.effMC
+                    anError = 0#effAverage.errEffMC
+                    listOfGraphs[ptBin].append( {'min': etaBin[0], 'max': etaBin[1],
+                                                  'val': aValue  , 'err': anError} )
+
+        return listOfGraphs
 
 
 
