@@ -309,7 +309,7 @@ def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', 
     p1.SetLeftMargin( c.GetLeftMargin() )
     p2.SetLeftMargin( c.GetLeftMargin() )
     firstGraph = True
-    leg = rt.TLegend(0.5,0.80,0.95 ,0.92)
+    leg = rt.TLegend(0.5,0.50,0.95 ,0.7)
     leg.SetFillColor(0)
     leg.SetBorderSize(0)
 
@@ -336,13 +336,16 @@ def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', 
         xMin = 0.0
 
     effminmax =  findMinMax_v2( effDataList )
-    effiMin = effminmax[0]
+    #effiMin = effminmax[0]
+    #effiMax = effminmax[1]
+
+    effiMin = 0.
     effiMax = effminmax[1]
 
     sfminmax =  findMinMax( sfList )
     sfMin = sfminmax[0]
-    sfMin = 0.5
-    sfMax = 1.5
+    sfMin = 0.8
+    sfMax = 1.2
 
     for key in sorted(effDataList.keys()):
         grBinsEffData = effUtil.makeTGraphAsymErrorFromList(effDataList[key], 'min', 'max')

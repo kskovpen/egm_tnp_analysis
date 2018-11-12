@@ -58,6 +58,20 @@ Everything will be done for a specific flag (so the settings can be the same for
    
 >   python tnpEGM_fitter.py etc/config/settings.py --flag myWP --createHists
 
+## How to use cut and count method
+ 
+**2.1
+
+You can run below lines in cms1.
+
+> python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT  --checkBins
+
+> python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT  --createBins
+
+> python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT  --createHists
+
+> python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT --doCutCount
+
 **3. Do your first round of fits.**
    * nominal fit
    
@@ -133,16 +147,6 @@ to the fitter. One can handle complex flags with a cut string (root cut string):
     Define in this section the init parameters for the different fit, can be tuned to improve convergence.
 
 ====================
-
-## How to do cut and count    
-
-> python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT  --checkBins
-
-> python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT  --createBins
-
-> python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT  --createHists
-
-> python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT --doCutCount
 
 #### adding remote (Fabrice version)
 git remote add origin git@github.com:fcouderc/egm_tnp_analysis.git

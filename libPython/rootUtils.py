@@ -426,6 +426,10 @@ def getAllCnCEffiAsymError( info, bindef ):
 
         #effis['dataNominal'] = computeEffiAsymError_cnc(nP,nF,nPsumw2,nFsumw2)
         effis['dataNominal'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
+
+        if effis['dataNominal'][0] == 0.001: # ONLY FOR DATA set efficiency as zero if the calculated efficiency is 0.001 from computeEffiAsymError_cnc() 
+           effis['dataNominal'][0] = 0.
+
         rootfile.Close()
     else: effis['dataNominal'] = [-1,-1]
 
