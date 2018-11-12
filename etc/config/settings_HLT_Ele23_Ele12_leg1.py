@@ -65,8 +65,8 @@ if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_puTree('/data1/EGM
 #############################################################
 biningDef = [
 
-   { 'var' : 'el_sc_eta' , 'type': 'float', 'bins': [-2.5,-2.0,-1.566,-1.4442, -0.8, 0.0, 0.8, 1.4442, 1.566, 2.0, 2.5] },
-   { 'var' : 'el_pt' , 'type': 'float', 'bins': [10,15,20,25,30,50,90,150,500] },
+   { 'var' : 'el_sc_eta' , 'type': 'float', 'bins': [-2.5,-2.0,-1.56,-1.4442, -0.8, 0.0, 0.8, 1.4442, 1.56, 2.0, 2.5] },
+   { 'var' : 'el_pt' , 'type': 'float', 'bins': [10,15,20,25,30,40,50,100,150,200] },
 
 ]
 

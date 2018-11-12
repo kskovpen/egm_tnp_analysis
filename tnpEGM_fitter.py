@@ -265,9 +265,10 @@ if args.doCutCount:
             print astr
             fOut.write( astr + '\n' )
             
-        astr =  '%+8.3f\t%+8.3f\t%+8.3f\t%+8.3f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.5f\t%5.3f\t%5.3f\t%5.3f\t%5.3f' % (
+        astr =  '%+8.3f\t%+8.3f\t%+8.3f\t%+8.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f' % (
             float(v1Range[0]), float(v1Range[2]),
             float(v2Range[0]), float(v2Range[2]),
+            # included the third and fourth element for asymmetric low/upper error 
             effis['dataNominal'][0],effis['dataNominal'][1],effis['dataNominal'][2],effis['dataNominal'][3],
             effis['mcNominal'  ][0],effis['mcNominal'  ][1],effis['mcNominal'  ][2],effis['mcNominal'  ][3],
             effis['dataAltBkg' ][0],

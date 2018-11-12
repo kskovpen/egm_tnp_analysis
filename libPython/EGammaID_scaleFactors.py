@@ -324,7 +324,7 @@ def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', 
         p1.SetLogx()
         p2.SetLogx()    
         xMin = 10
-        xMax = 500
+        xMax = 200
     elif 'vtx' in xAxis or 'Vtx' in xAxis or 'PV' in xAxis:
         xMin =  3
         xMax = 42
@@ -341,15 +341,15 @@ def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', 
 
     sfminmax =  findMinMax( sfList )
     sfMin = sfminmax[0]
-#    sfMin = 0.94
-#    sfMax = 1.02
+    sfMin = 0.5
+    sfMax = 1.5
 
     for key in sorted(effDataList.keys()):
         grBinsEffData = effUtil.makeTGraphAsymErrorFromList(effDataList[key], 'min', 'max')
         grBinsSF      = effUtil.makeTGraphFromList(sfList[key]     , 'min', 'max')
         grBinsEffMC = None
         if not effMCList is None:
-            grBinsEffMC = effUtil.makeTGraphFromList(effMCList[key], 'min', 'max') # all errors are included in data points
+            grBinsEffMC = effUtil.makeTGraphFromList(effMCList[key], 'min', 'max') # use symmetric error for scale factor plot
             grBinsEffMC.SetLineStyle( rt.kDashed )
             grBinsEffMC.SetLineColor( graphColors[igr] )
             grBinsEffMC.SetMarkerSize( 0 )

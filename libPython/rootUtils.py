@@ -113,12 +113,11 @@ def computeEffi_cnc( n1,n2,e1,e2):
 
     return effout
 
-# https://root.cern.ch/doc/master/TGraphAsymmErrors_8cxx_source.html#l00573 (Line 858)
-# use Divide function in TGraphAsymErrors 
+# use Divide() in TGraphAsymErrors 
 def computeEffiAsymError_cnc(n1,n2,e1,e2):
     effout = []
 
-    # temporary histograms for nominator and denominator
+    # temporary histograms with only one bin for nominator and denominator as inputs for TGraphAsymErrors::Divide()
     htemp_nom=rt.TH1D("temp_nom", "temp_nom", 1, 0., 1.)
     htemp_denom=rt.TH1D("temp_denom", "temp_denom", 1, 0., 1.)
 
@@ -135,12 +134,14 @@ def computeEffiAsymError_cnc(n1,n2,e1,e2):
     high = grEff.GetErrorYhigh(0)
     low = grEff.GetErrorYlow(0)
 
-    if eff < 1e-6: eff = 1e-6 # just to avoid zero in denominator
+    if eff < 1e-3: eff = 1e-3 # just to avoid zero in denominator
+    if high < 1e-3: high = 1e-3
+    if low < 1e-3: low = 1e-3
 
     effout.append(eff)
-    effout.append((low+high))
-    effout.append(low)
-    effout.append(high)
+    effout.append(low+high) # total error, this will be used when scale factor error is calculated
+    effout.append(low) # low error, this will be used for 1D plots
+    effout.append(high) # upper error, this wiil e use for 1D plots
     
     return effout
 
