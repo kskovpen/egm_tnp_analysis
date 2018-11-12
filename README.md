@@ -57,12 +57,10 @@ Everything will be done for a specific flag (so the settings can be the same for
 **2. Create the histograms** with the different cuts... this is the longest step. Histograms will not be re-done later
    
 >   python tnpEGM_fitter.py etc/config/settings.py --flag myWP --createHists
-
-## How to use cut and count method
  
-**2.1
+**2.1 Use cut and count method**
 
-You can run below lines in cms1.
+You can run below lines in cms1 server where the tnp trees stored.
 
 > python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12_leg2.py --flag passingHLT  --checkBins
 
