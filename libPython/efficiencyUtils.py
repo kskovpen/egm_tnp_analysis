@@ -1,5 +1,6 @@
 import math
 
+#FIXME: make a new efficiency class only for cut and count method (currently existing effciency class is modifed for cut and count)
 class efficiency:
     #    altEff = [-1]*7
     iAltBkgModel = 0

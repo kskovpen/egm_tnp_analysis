@@ -269,120 +269,6 @@ def getAllEffi( info, bindef ):
         effis['dataAltBkg'] = [-1,-1]
     return effis
 
-
-def getAllCnCEffi( info, bindef ):
-    effis = {}
-    if not info['mcNominal'] is None and os.path.isfile(info['mcNominal']):
-        rootfile = rt.TFile( info['mcNominal'], 'read' )
-        hP = rootfile.Get('%s_Pass'%bindef['name'])
-        hF = rootfile.Get('%s_Fail'%bindef['name'])
-        bin1 = 1
-        bin2 = hP.GetXaxis().GetNbins()
-        eP = rt.Double(-1.0)
-        eF = rt.Double(-1.0)
-        nP = hP.IntegralAndError(bin1,bin2,eP)
-        nF = hF.IntegralAndError(bin1,bin2,eF)
-
-        effis['mcNominal'] = computeEffi_cnc(nP,nF,eP,eF)
-        rootfile.Close()
-    else: effis['mcNominal'] = [-1,-1]
-
-    if not info['dataNominal'] is None and os.path.isfile(info['dataNominal']):
-        rootfile = rt.TFile( info['dataNominal'], 'read' )
-        hP = rootfile.Get('%s_Pass'%bindef['name'])
-        hF = rootfile.Get('%s_Fail'%bindef['name'])
-        bin1 = 1
-        bin2 = hP.GetXaxis().GetNbins()
-        eP = rt.Double(-1.0)
-        eF = rt.Double(-1.0)
-        nP = hP.IntegralAndError(bin1,bin2,eP)
-        nF = hF.IntegralAndError(bin1,bin2,eF)
-
-        effis['dataNominal'] = computeEffi_cnc(nP,nF,eP,eF)
-        rootfile.Close()
-    else: effis['dataNominal'] = [-1,-1]
-
-    if not info['dataAltBkg'] is None and os.path.isfile(info['dataAltBkg']):
-        rootfile = rt.TFile( info['dataAltBkg'], 'read' )
-        from ROOT import RooFit,RooFitResult
-        fitresP = rootfile.Get( '%s_resP' % bindef['name']  )
-        fitresF = rootfile.Get( '%s_resF' % bindef['name'] )
-
-        nP = fitresP.floatParsFinal().find('nSigP').getVal()
-        nF = fitresF.floatParsFinal().find('nSigF').getVal()
-        eP = fitresP.floatParsFinal().find('nSigP').getError()
-        eF = fitresF.floatParsFinal().find('nSigF').getError()
-        rootfile.Close()
-
-        rootfile = rt.TFile( info['data'], 'read' )
-        hP = rootfile.Get('%s_Pass'%bindef['name'])
-        hF = rootfile.Get('%s_Fail'%bindef['name'])
-
-        if eP > math.sqrt(hP.Integral()) : eP = math.sqrt(hP.Integral())
-        if eF > math.sqrt(hF.Integral()) : eF = math.sqrt(hF.Integral())
-        rootfile.Close()
-
-        effis['dataAltBkg'] = computeEffi_cnc(nP,nF,eP,eF)
-    else:
-        effis['dataAltBkg'] = [-1,-1]
-
-    if not info['dataAltSig'] is None and os.path.isfile(info['dataAltSig']) :
-        rootfile = rt.TFile( info['dataAltSig'], 'read' )
-        from ROOT import RooFit,RooFitResult
-        fitresP = rootfile.Get( '%s_resP' % bindef['name']  )
-        fitresF = rootfile.Get( '%s_resF' % bindef['name'] )
-
-        nP = fitresP.floatParsFinal().find('nSigP').getVal()
-        nF = fitresF.floatParsFinal().find('nSigF').getVal()
-        eP = fitresP.floatParsFinal().find('nSigP').getError()
-        eF = fitresF.floatParsFinal().find('nSigF').getError()
-        rootfile.Close()
-
-        rootfile = rt.TFile( info['data'], 'read' )
-        hP = rootfile.Get('%s_Pass'%bindef['name'])
-        hF = rootfile.Get('%s_Fail'%bindef['name'])
-
-        if eP > math.sqrt(hP.Integral()) : eP = math.sqrt(hP.Integral())
-        if eF > math.sqrt(hF.Integral()) : eF = math.sqrt(hF.Integral())
-        rootfile.Close()
-
-        effis['dataAltSig'] = computeEffi_cnc(nP,nF,eP,eF)
-
-    else:
-        effis['dataAltSig'] = [-1,-1]
-
-    if not info['tagSel'] is None and os.path.isfile(info['tagSel']):
-        rootfile = rt.TFile( info['tagSel'], 'read' )
-        hP = rootfile.Get('%s_Pass'%bindef['name'])
-        hF = rootfile.Get('%s_Fail'%bindef['name'])
-        bin1 = 1
-        bin2 = hP.GetXaxis().GetNbins()
-        eP = rt.Double(-1.0)
-        eF = rt.Double(-1.0)
-        nP = hP.IntegralAndError(bin1,bin2,eP)
-        nF = hF.IntegralAndError(bin1,bin2,eF)
-
-        effis['tagSel'] = computeEffi_cnc(nP,nF,eP,eF)
-        rootfile.Close()
-    else: effis['tagSel'] = [-1,-1]
-
-    if not info['mcAlt'] is None and os.path.isfile(info['mcAlt']):
-        rootfile = rt.TFile( info['mcAlt'], 'read' )
-        hP = rootfile.Get('%s_Pass'%bindef['name'])
-        hF = rootfile.Get('%s_Fail'%bindef['name'])
-        bin1 = 1
-        bin2 = hP.GetXaxis().GetNbins()
-        eP = rt.Double(-1.0)
-        eF = rt.Double(-1.0)
-        nP = hP.IntegralAndError(bin1,bin2,eP)
-        nF = hF.IntegralAndError(bin1,bin2,eF)
-
-        effis['mcAlt'] = computeEffi_cnc(nP,nF,eP,eF)
-        rootfile.Close()
-    else: effis['mcAlt'] = [-1,-1]
-
-    return effis
-
 def getAllCnCEffiAsymError( info, bindef ):
     effis = {}
     if not info['mcNominal'] is None and os.path.isfile(info['mcNominal']):
@@ -396,13 +282,6 @@ def getAllCnCEffiAsymError( info, bindef ):
         nP = hP.IntegralAndError(bin1,bin2,eP)
         nF = hF.IntegralAndError(bin1,bin2,eF)
 
-        #nPsumw2 = 0
-        #nFsumw2 = 0
-        #for i in range(1, hP.GetSumw2().fN -1): # exclude under/over flow bins
-        #    nPsumw2 += hP.GetSumw2().At(i)
-        #    nFsumw2 += hF.GetSumw2().At(i)
-
-        #effis['mcNominal'] = computeEffiAsymError_cnc(nP,nF,nPsumw2,nFsumw2)
         effis['mcNominal'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
         rootfile.Close()
     else: effis['mcNominal'] = [-1,-1]
@@ -418,13 +297,6 @@ def getAllCnCEffiAsymError( info, bindef ):
         nP = hP.IntegralAndError(bin1,bin2,eP)
         nF = hF.IntegralAndError(bin1,bin2,eF)
 
-        #nPsumw2 = 0
-        #nFsumw2 = 0
-        #for i in range(1, hP.GetSumw2().fN -1): # exclude under/over flow bins
-        #    nPsumw2 += hP.GetSumw2().At(i)
-        #    nFsumw2 += hF.GetSumw2().At(i)
-
-        #effis['dataNominal'] = computeEffiAsymError_cnc(nP,nF,nPsumw2,nFsumw2)
         effis['dataNominal'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
 
         if effis['dataNominal'][0] == 0.001: # ONLY FOR DATA set efficiency as zero if the calculated efficiency is 0.001 from computeEffiAsymError_cnc() 

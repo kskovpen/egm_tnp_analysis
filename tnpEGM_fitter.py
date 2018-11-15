@@ -282,4 +282,4 @@ if args.doCutCount:
 
     print 'Effis saved in file : ',  effFileName
     import libPython.EGammaID_scaleFactors as egm_sf
-egm_sf.doEGM_SFs(effFileName,35.9)
+egm_sf.doEGM_SFs(effFileName,35.9) #FIXME: make a doEGM_SFs_cnc for cut and count method only
