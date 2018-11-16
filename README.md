@@ -1,5 +1,12 @@
 # egm_tnp_analysis
 
+In this branch, the cut and count option is privately included.
+
+## Install egm_tnp_Moriond17_v2.0_cnc branch
+
+> git clone git@github.com:jhkim06/egm_tnp_analysis.git
+
+> git checkout -b BRANCH_NAME origin/egm_tnp_Moriond17_v2.0_cnc
 
 ## Install stable branch
 
@@ -58,7 +65,7 @@ Everything will be done for a specific flag (so the settings can be the same for
    
 >   python tnpEGM_fitter.py etc/config/settings.py --flag myWP --createHists
  
-**2.1 Use cut and count method**
+**2.1 Use cut and count method** (this option privately included by me)
 
 You can run below lines in cms1 server where the tnp trees stored.
 
