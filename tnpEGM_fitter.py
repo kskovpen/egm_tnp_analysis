@@ -20,6 +20,7 @@ parser.add_argument('--doPlot'     , action='store_true'  , help = 'plotting')
 parser.add_argument('--sumUp'      , action='store_true'  , help = 'sum up efficiencies')
 parser.add_argument('--iBin'       , dest = 'binNumber'   , type = int,  default=-1, help='bin number (to refit individual bin)')
 parser.add_argument('--flag'       , default = None       , help ='WP to test')
+parser.add_argument('--settingsOpt', default = None       , help = 'Additional option for settings file')
 parser.add_argument('settings'     , default = None       , help = 'setting file [mandatory]')
 
 

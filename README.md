@@ -1,5 +1,14 @@
 # egm_tnp_analysis
 
+## Quick guide for HLT efficiencies
+For leg 1 of HLT\_Ele23\_Ele12 (using pt vs eta binning):
+```
+python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12.py --flag passingEtLeg1Ele23Ele12 --settingsOpt='pt_vs_eta' --checkBins
+python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12.py --flag passingEtLeg1Ele23Ele12 --settingsOpt='pt_vs_eta' --createBins
+python tnpEGM_fitter.py etc/config/settings_HLT_Ele23_Ele12.py --flag passingEtLeg1Ele23Ele12 --settingsOpt='pt_vs_eta' --createHists
+```
+
+
 ## General note on installation
 
 This code can in principle run on your laptop but you need ROOT 6.10 or higher and RooFit installed to use some advanced features when creating histograms.

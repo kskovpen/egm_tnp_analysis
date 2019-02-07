@@ -1,18 +1,18 @@
 #############################################################
 ########## General settings
 #############################################################
-
-type = 'pt_vs_eta'
+import sys
+type = sys.modules['__main__'].args.settingsOpt
 
 # flag to be Tested
 flags = {
     'passingL1TEle23Ele12' : '(passL1TEle23Ele12 == 1)',
-    'passingEtLeg1Ele23Ele12' : '(passEtLeg1Ele23Ele12 == 1'),
-    'passingEtLeg2Ele23Ele12' : '(passEtLeg2Ele23Ele12 == 1'),
-    'passingPixelMatchLeg1Ele23Ele12' : 'passPixelMatchLeg1Ele23Ele12 == 1)',
-    'passingPixelMatchLeg2Ele23Ele12' : 'passPixelMatchLeg2Ele23Ele12 == 1)',
+    'passingEtLeg1Ele23Ele12' : '(passEtLeg1Ele23Ele12 == 1)',
+    'passingEtLeg2Ele23Ele12' : '(passEtLeg2Ele23Ele12 == 1)',
+    'passingPixelMatchLeg1Ele23Ele12' : '(passPixelMatchLeg1Ele23Ele12 == 1)',
+    'passingPixelMatchLeg2Ele23Ele12' : '(passPixelMatchLeg2Ele23Ele12 == 1)',
     }
-baseOutDir = 'results/2018/tnpEleTrig/Ele23Ele12'
+baseOutDir = 'results/2018/tnpEleTrig/Ele23Ele12/' + type
 
 #############################################################
 ########## samples definition  - preparing the samples
@@ -56,22 +56,22 @@ if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_weight(weightName)
 #############################################################
 if type=='pt_vs_eta':
   biningDef = [
-     { 'var' : 'probe_sc_eta' , 'type': 'abs_float', 'bins': [0.0, 1.479, 2.5] },
-     { 'var' : 'probe_sc_et' , 'type': 'float', 'bins': [10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 27.0, 28.5, 30.0, 35.0, 40.0, 45.0, 50.0,60.0,70.0,80.0,100.0, 150.0, 200.0, 250.0] },
+     { 'var' : 'el_sc_eta' , 'type': 'abs_float', 'bins': [0.0, 1.479, 2.5] },
+     { 'var' : 'el_sc_et' , 'type': 'float', 'bins': [10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 27.0, 28.5, 30.0, 35.0, 40.0, 45.0, 50.0,60.0,70.0,80.0,100.0, 150.0, 200.0, 250.0] },
   ]
 elif type=='pt_vs_eta':
   biningDef = [
-     { 'var' : 'probe_sc_eta' , 'type': 'float', 'bins': [-2.5,-2.2,-1.566,-1.4442, -1.0, -0.6,-0.3,-0.1, 0.1, 0.3,0.6,1.0, 1.4442, 1.566, 2.2, 2.5] },
-     { 'var' : 'probe_sc_et' , 'type': 'float', 'bins': [30,250] },
+     { 'var' : 'el_sc_eta' , 'type': 'float', 'bins': [-2.5,-2.2,-1.566,-1.4442, -1.0, -0.6,-0.3,-0.1, 0.1, 0.3,0.6,1.0, 1.4442, 1.566, 2.2, 2.5] },
+     { 'var' : 'el_sc_et' , 'type': 'float', 'bins': [30,250] },
   ]
 elif type=='eta_vs_phi':
   biningDef = [
-     { 'var' : 'probe_sc_eta' , 'type': 'float', 'bins': [-2.5,-1.479, 0.0, 1.479, 2.5] },
-     { 'var' : 'probe_sc_phi' , 'type': 'float', 'bins': [ -3.15, -2.4, -1.8, -1.2, -0.6, 0., 0.6, 1.2, 1.8, 2.4, 3.15] },
+     { 'var' : 'el_sc_eta' , 'type': 'float', 'bins': [-2.5,-1.479, 0.0, 1.479, 2.5] },
+     { 'var' : 'el_sc_phi' , 'type': 'float', 'bins': [ -3.15, -2.4, -1.8, -1.2, -0.6, 0., 0.6, 1.2, 1.8, 2.4, 3.15] },
   ]
 elif type=='eta_vs_nvtx':
   biningDef = [
-     { 'var' : 'probe_sc_eta' , 'type': 'abs_float', 'bins': [0.0, 1.479, 2.5] },
+     { 'var' : 'el_sc_eta' , 'type': 'abs_float', 'bins': [0.0, 1.479, 2.5] },
      { 'var' : 'event_nPV' , 'type': 'float', 'bins': [0., 3., 6., 9., 12., 15., 18., 21., 24., 27., 30., 33., 36., 39., 42., 45., 48., 51., 54., 57., 60., 63., 66., 69.] },
   ]
 
@@ -80,8 +80,8 @@ elif type=='eta_vs_nvtx':
 #############################################################
 ### cut
 
-cutBase = 'tag_sc_et > 35 && abs(tag_sc_eta) < 2.1 && passL1T == 1'
-if type!='pt_vs_eta': cutBase += ' && probe_sc_et > 30'
+cutBase = 'tag_sc_et > 35 && abs(tag_sc_eta) < 2.1 && passL1TEle23Ele12 == 1'
+if type!='pt_vs_eta': cutBase += ' && el_sc_et > 30'
 
 # can add addtionnal cuts for some bins (first check bin number using tnpEGM --checkBins)
 #additionalCuts = {i : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45' for i in range(20)}
