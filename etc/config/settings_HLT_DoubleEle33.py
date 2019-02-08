@@ -10,13 +10,10 @@ type = sys.modules['__main__'].args.settingsOpt
 
 # flag to be Tested
 flags = {
-    'passingL1TEle23Ele12' : '(passL1TEle23Ele12 == 1)',
-    'passingEtLeg1Ele23Ele12' : '(passEtLeg1Ele23Ele12 == 1)',
-    'passingEtLeg2Ele23Ele12' : '(passEtLeg2Ele23Ele12 == 1)',
-    'passingPixelMatchLeg1Ele23Ele12' : '(passPixelMatchLeg1Ele23Ele12 == 1)',
-    'passingPixelMatchLeg2Ele23Ele12' : '(passPixelMatchLeg2Ele23Ele12 == 1)',
+    'passingSeededDouble33' : '(passPMS2SeededFilterDouble33 == 1)',
+    'passingUnseededDouble33' : '(passPMS2UnseededFilterDouble33 == 1)',
     }
-baseOutDir = 'results/2018/tnpEleTrig/Ele23Ele12/' + type
+baseOutDir = 'results/2018/tnpEleTrig/DoubleEle33/' + type
 
 #############################################################
 ########## samples definition  - preparing the samples
@@ -25,12 +22,12 @@ baseOutDir = 'results/2018/tnpEleTrig/Ele23Ele12/' + type
 ### not: you can setup another sampleDef File in inputs
 import etc.inputs.tnpSampleDef as tnpSamples
 
-tnpTreeDir = 'tnpEleTrig' # tree name of the input root files 
+tnpTreeDir = 'tnpEleTrig' # tree name of the input root files
 
 samplesDef = {
     'data'   : tnpSamples.samples2018['Run2018A'].clone(),
     'mcNom'  : tnpSamples.samples2018['DY'].clone(),
-    'mcAlt'  : None, 
+    'mcAlt'  : None,
     'tagSel' : None,
 }
 samplesDef['data'].add_sample( tnpSamples.samples2018['Run2018B'] )
@@ -84,7 +81,7 @@ elif type=='eta_vs_nvtx':
 #############################################################
 ### cut
 
-cutBase = 'tag_sc_et > 35 && abs(tag_sc_eta) < 2.1 && passL1TEle23Ele12 == 1'
+cutBase = 'tag_sc_et > 35 && abs(tag_sc_eta) < 2.1'
 if type!='pt_vs_eta': cutBase += ' && el_sc_et > 30'
 
 # can add addtionnal cuts for some bins (first check bin number using tnpEGM --checkBins)
