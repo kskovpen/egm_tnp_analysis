@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser(description='tnp EGM fitter')
 parser.add_argument('--checkBins'  , action='store_true'  , help = 'check  bining definition')
 parser.add_argument('--createBins' , action='store_true'  , help = 'create bining definition')
 parser.add_argument('--createHists', action='store_true'  , help = 'create histograms')
+parser.add_argument('--drawPlot'   , action='store_true'  , help = 'create histograms using cut and count')
 parser.add_argument('--sample'     , default='all'        , help = 'create histograms (per sample, expert only)')
 parser.add_argument('--altSig'     , action='store_true'  , help = 'alternate signal model fit')
 parser.add_argument('--altBkg'     , action='store_true'  , help = 'alternate background model fit')
@@ -93,6 +94,8 @@ if args.createHists:
 
     import libPython.histUtils as tnpHist
 
+    dataList = []
+    mcList = []
     for sampleType in tnpConf.samplesDef.keys():
         sample =  tnpConf.samplesDef[sampleType]
         if sample is None : continue
@@ -100,12 +103,85 @@ if args.createHists:
             print 'creating histogram for sample '
             sample.dump()
             var = { 'name' : 'pair_mass', 'nbins' : 80, 'min' : 50, 'max': 130 }
-            if sample.mcTruth:
-                var = { 'name' : 'pair_mass', 'nbins' : 80, 'min' : 50, 'max': 130 }
+            if sample.mcTruth: mcList.append(sample.histFile)
+            else:              dataList.append(sample.histFile)
             tnpHist.makePassFailHistograms( sample, tnpConf.flags[args.flag], tnpBins, var )
 
+    #### From here on, added by Junho: make efficiency text file using cut and count efficiency
+    print dataList
+    fOutList = []
+    for datumList in dataList:
+        print datumList
+
+        info = {
+            'data'        : datumList,
+            'dataNominal' : None,
+            'dataAltSig'  : None,
+            'dataAltBkg'  : None,
+            'mcNominal'   : mcList[0],
+            'mcAlt'       : None,
+            'tagSel'      : None
+            }
+
+        effis = None
+        effFileName ='%s/egammaEffi%s.txt' % (outputDirectory, (datumList.split('/')[5]).split('.root')[0])
+        fOut = open( effFileName,'w')
+        fOutList.append(effFileName)
+
+        for ib in range(len(tnpBins['bins'])):
+            effis = tnpRoot.getAllEffi( info, tnpBins['bins'][ib] )
+           # effis = tnpRoot.getAllNumbers( info, tnpBins['bins'][ib] )
+
+            ### formatting assuming 2D bining -- to be fixed
+            v1Range = tnpBins['bins'][ib]['title'].split(';')[1].split('<')
+            v2Range = tnpBins['bins'][ib]['title'].split(';')[2].split('<')
+            if ib == 0 :
+                astr = '### var1 : %s' % v1Range[1]
+                print astr
+                fOut.write( astr + '\n' )
+                astr = '### var2 : %s' % v2Range[1]
+                print astr
+                fOut.write( astr + '\n' )
+
+            astr =  '%+8.3f\t%+8.3f\t%+8.3f\t%+8.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f' % (
+              float(v1Range[0]), float(v1Range[2]),
+              float(v2Range[0]), float(v2Range[2]),
+              effis['data'][0],effis['data'][1],
+              effis['mcNominal'  ][0],effis['mcNominal'  ][1],
+              effis['dataAltBkg' ][0],
+              effis['dataAltSig' ][0],
+              effis['mcAlt' ][0],
+              effis['tagSel'][0],
+            )
+            print astr
+            fOut.write( astr + '\n' )
+        fOut.close()
+    ####
+
+    print fOutList
     sys.exit(0)
 
+
+#
+# Based on Juhno's code
+#
+if args.drawPlot:
+
+    #### collect all effi txt files
+    fOutList = []
+    sample =  tnpConf.samplesDef['data']
+    temp_ = sample.name
+
+#    print temp_
+#    temp_txtFile = outputDirectory + '/' + 'egammaEffidata_' + temp_.split('_')[1] + '_' + temp_.split('_')[2] + '_' + temp_.split('_')[3] + '_' + args.flag + '_' + args.plotX + '.txt'
+#    fOutList.append(temp_txtFile)
+#    print temp_txtFile
+
+    fOutList = ['results/2018/tnpEleTrig/Ele23Ele12/pt_vs_eta/passingEtLeg1Ele23Ele12//egammaEffipassingEtLeg1Ele23Ele12.txt']
+    print fOutList
+    import libPython.EGammaID_scaleFactors as egm_sf
+    egm_sf.draw1Dplots(fOutList, -1., outputDirectory, args.settingsOpt)
+    sys.exit(0)
 
 ####################################################################
 ##### Actual Fitter
