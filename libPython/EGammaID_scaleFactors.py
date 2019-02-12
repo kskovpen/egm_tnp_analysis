@@ -309,7 +309,7 @@ def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', 
     p1.SetLeftMargin( c.GetLeftMargin() )
     p2.SetLeftMargin( c.GetLeftMargin() )
     firstGraph = True
-    leg = rt.TLegend(0.5,0.50,0.95 ,0.7)
+    leg = rt.TLegend(0.5,0.8,0.95 ,0.93)
     leg.SetFillColor(0)
     leg.SetBorderSize(0)
 
@@ -319,15 +319,15 @@ def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', 
     listOfMC      = []
 
     xMin = 10
-    xMax = 200
+    xMax = 500
     if 'pT' in xAxis or 'pt' in xAxis:
         p1.SetLogx()
         p2.SetLogx()    
         xMin = 10
-        xMax = 200
+        xMax = 500
     elif 'vtx' in xAxis or 'Vtx' in xAxis or 'PV' in xAxis:
-        xMin =  3
-        xMax = 42
+        xMin =  0
+        xMax = 70
     elif 'eta' in xAxis or 'Eta' in xAxis:
         xMin = -2.60
         xMax = +2.60
@@ -336,16 +336,16 @@ def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', 
         xMin = 0.0
 
     effminmax =  findMinMax_v2( effDataList )
-    #effiMin = effminmax[0]
-    #effiMax = effminmax[1]
-
-    effiMin = 0.
+    effiMin = effminmax[0]
     effiMax = effminmax[1]
+
+    #effiMin = 0.
+    #effiMax = effminmax[1]
 
     sfminmax =  findMinMax( sfList )
     sfMin = sfminmax[0]
     sfMin = 0.8
-    sfMax = 1.2
+    #sfMax = 1.2
 
     for key in sorted(effDataList.keys()):
         grBinsEffData = effUtil.makeTGraphAsymErrorFromList(effDataList[key], 'min', 'max')
@@ -489,6 +489,63 @@ import gc
 gc.collect()
 ##
 
+def doPlot(filein, lumi, axis = ['pT','eta'] ):
+    print " Opening file: %s (plot lumi: %3.1f)" % ( filein, lumi )
+    CMS_lumi.lumi_13TeV = "%+3.1f fb^{-1}" % lumi
+
+    nameOutBase = filein
+    if not os.path.exists( filein ) :
+        print 'file %s does not exist' % filein
+        sys.exit(1)
+
+
+    fileWithEff = open(filein, 'r')
+    effGraph = efficiencyList()
+
+    for line in fileWithEff :
+        modifiedLine = line.lstrip(' ').rstrip(' ').rstrip('\n')
+        numbers = modifiedLine.split('\t')
+
+        if len(numbers) > 0 and isFloat(numbers[0]):
+            etaKey = ( float(numbers[0]), float(numbers[1]) )
+            ptKey  = ( float(numbers[2]), min(500,float(numbers[3])) )
+
+            myeff = efficiency(ptKey,etaKey,
+                               float(numbers[4]),float(numbers[5]),float(numbers[6] ),float(numbers[7] ),float(numbers[8]),float(numbers[9]),float(numbers[10] ),float(numbers[11] ),
+                               float(numbers[12]),float(numbers[13]),float(numbers[14]),float(numbers[15]) )
+#                           float(numbers[8]),float(numbers[9]),float(numbers[10]), -1 )
+
+            effGraph.addEfficiency(myeff)
+
+    fileWithEff.close()
+
+    print " ------------------------------- "
+
+    pdfout = nameOutBase + '_egammaPlots.pdf'
+    cDummy = rt.TCanvas()
+    cDummy.Print( pdfout + "[" )
+
+    if axis[0] == 'vtx' or axis[0] == 'pT':
+
+       EffiGraphAsymError1D( effGraph.pt_1DGraphAsymError_list( False , False) , #eff Data
+                    None,
+                    effGraph.pt_1DGraph_list( True , False) , #SF
+                    pdfout,
+                    xAxis = axis[0], yAxis = axis[1] )
+
+
+    if axis[0] == 'eta':
+       EffiGraphAsymError1D( effGraph.eta_1DGraphAsymError_list( typeGR =  0 , doAverage = False) , # eff Data
+                              effGraph.eta_1DGraphAsymError_list( typeGR = -1 , doAverage = False) , # eff MC
+                              effGraph.eta_1DGraphAsymError_list( typeGR = +1 , doAverage = False) , # SF
+                              pdfout,
+                              xAxis = axis[0], yAxis = axis[1] )
+
+
+
+    cDummy.Print( pdfout + "]" )
+
+
 def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
     print " Opening file: %s (plot lumi: %3.1f)" % ( filein, lumi )
     CMS_lumi.lumi_13TeV = "%+3.1f fb^{-1}" % lumi 
@@ -538,9 +595,9 @@ def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
     cDummy.Print( pdfout + "[" )
 
 
-    EffiGraphAsymError1D( effGraph.pt_1DGraphAsymError_list( False ) , #eff Data
+    EffiGraphAsymError1D( effGraph.pt_1DGraphAsymError_list( False , True) , #eff Data
                  None, 
-                 effGraph.pt_1DGraph_list( True ) , #SF
+                 effGraph.pt_1DGraph_list( True, True ) , #SF
                  pdfout,
                  xAxis = axis[0], yAxis = axis[1] )
 

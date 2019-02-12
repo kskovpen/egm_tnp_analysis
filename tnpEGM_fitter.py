@@ -12,6 +12,8 @@ parser.add_argument('--checkBins'  , action='store_true'  , help = 'check  binin
 parser.add_argument('--createBins' , action='store_true'  , help = 'create bining definition')
 parser.add_argument('--createHists', action='store_true'  , help = 'create histograms')
 parser.add_argument('--doCutCount', action='store_true'  , help = 'do cut and count')
+parser.add_argument('--onlyDoPlot', action='store_true'  , help = 'do not create SF root files and systematic plots', default = False)
+parser.add_argument('--plotX'     , default = None     , help ='x axis of plot to draw') # plot type to draw
 parser.add_argument('--sample'     , default='all'        , help = 'create histograms (per sample, expert only)')
 parser.add_argument('--altSig'     , action='store_true'  , help = 'alternate signal model fit')
 parser.add_argument('--altBkg'     , action='store_true'  , help = 'alternate background model fit')
@@ -282,4 +284,13 @@ if args.doCutCount:
 
     print 'Effis saved in file : ',  effFileName
     import libPython.EGammaID_scaleFactors as egm_sf
-egm_sf.doEGM_SFs(effFileName,sampleToFit.lumi) #FIXME: make a doEGM_SFs_cnc for cut and count method only
+    if not args.onlyDoPlot:
+       egm_sf.doEGM_SFs(effFileName,sampleToFit.lumi) #FIXME: make a doEGM_SFs_cnc for cut and count method only
+    if args.onlyDoPlot:
+       if 'et' == args.plotX : egm_sf.doPlot(effFileName,sampleToFit.lumi) #efficienct vs pt
+       if 'nvtx' == args.plotX : egm_sf.doPlot(effFileName,sampleToFit.lumi, ['vtx','eta']) #efficienct vs vtx
+       if 'eta' == args.plotX : egm_sf.doPlot(effFileName,sampleToFit.lumi, ['eta','pT']) # efficiency vs eta 
+       
+        
+
+
