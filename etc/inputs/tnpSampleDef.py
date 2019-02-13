@@ -15,6 +15,8 @@ EGamma2018_test = {
                                        isMC = True, nEvts = 49144274 ),
 
     'data_Run2018Av1' : tnpSample('data_Run2018Av1' , myinputDir_2018 + 'data/EGamma/TnPTree_SingleElectron_2018rereco_RunAv1.root' , lumi = 5.788 ),
+    'data_Run2018Av2' : tnpSample('data_Run2018Av2' , myinputDir_2018 + 'data/EGamma/TnPTree_SingleElectron_2018rereco_RunAv2.root' , lumi = 5.788 ),
+    'data_Run2018Av3' : tnpSample('data_Run2018Av3' , myinputDir_2018 + 'data/EGamma/TnPTree_SingleElectron_2018rereco_RunAv3.root' , lumi = 5.788 ),
     }
 
 

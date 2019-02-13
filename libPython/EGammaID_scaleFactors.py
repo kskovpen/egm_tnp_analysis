@@ -287,6 +287,237 @@ def EffiGraph1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', yAxis = '
 
     #################################################    
 
+def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameList, xAxis = 'pT', yAxis = 'eta', EB_or_EE = 'EB'):
+
+    W = 800
+    H = 800
+    yUp = 0.3
+    canName = 'toto' + xAxis + EB_or_EE
+
+    c = rt.TCanvas(canName,canName,50,50,H,W)
+    c.SetTopMargin(0.055)
+    c.SetBottomMargin(0.10)
+    c.SetLeftMargin(0.12)
+
+
+    p1 = rt.TPad( canName + '_up', canName + '_up', 0, yUp + 0.001, 1,   1, 0,0,0)
+    p2 = rt.TPad( canName + '_do', canName + '_do', 0,   0, 1, yUp, 0,0,0)
+    p1.SetBottomMargin(0.02)
+    p1.SetTopMargin(   c.GetTopMargin()*1/(1-yUp))
+    p1.SetGridy()
+    p2.SetTopMargin(   0.0075)
+    p2.SetBottomMargin( c.GetBottomMargin()*1/yUp)
+    p1.SetLeftMargin( c.GetLeftMargin() )
+    p2.SetLeftMargin( c.GetLeftMargin() )
+    firstGraph = True
+    #leg = rt.TLegend(0.35, 0.8, 0.65 ,0.93) # for eta, nvtx
+    leg = rt.TLegend(0.35, 0.8, 0.65 ,0.93) # for et plot
+    leg.SetFillColor(0)
+    leg.SetBorderSize(0)
+    leg.SetFillStyle(0)
+
+    igr = 0
+    listOfTGraph1 = []
+    listOfTGraph2 = []
+    listOfMC      = []
+
+    xMin = 10
+    xMax = 200
+    if 'pT' in xAxis or 'pt' in xAxis:
+        p1.SetLogx()
+        p2.SetLogx()
+        xMin = 10
+        xMax = 500
+    elif 'vtx' in xAxis or 'Vtx' in xAxis or 'PV' in xAxis:
+        xMin =  0
+        xMax = 70
+    elif 'eta' in xAxis or 'Eta' in xAxis:
+        xMin = -2.50
+        xMax = +2.50
+    elif 'phi' in xAxis or 'Phi' in xAxis:
+        xMin = -3.15
+        xMax = +3.15
+    elif 'z' in xAxis or 'Z' in xAxis:
+        xMin = 0
+        xMax = 20
+
+    if 'abs' in xAxis or 'Abs' in xAxis:
+        xMin = 0.0
+
+    # loop over effGraphList and save them into listOfTGraph
+    idx_sfList = 0
+    for list_ in effDataLists :
+        if 'eta' not in xAxis :
+           if 'EB' == EB_or_EE :
+              effDataList = list_.pt_1DGraphAsymError_list( False , False)
+              effMCList= None
+              sfList = list_.pt_1DGraph_list( True , False)
+              name = fileNameList[idx_sfList]
+           elif 'EE' == EB_or_EE :
+              effDataList = list_.pt_1DGraphAsymError_list( False , False, isBE = False)
+              effMCList= None
+              sfList = list_.pt_1DGraph_list( True , False, isBE = False)
+              name = fileNameList[idx_sfList]
+        elif 'eta' in xAxis :
+              effDataList = list_.eta_1DGraphAsymError_list( typeGR =  0 , doAverage = False)
+              effMCList = list_.eta_1DGraphAsymError_list( typeGR = -1 , doAverage = False)
+              sfList = sfLists[idx_sfList].eta_1DGraphAsymError_list( typeGR = +1 , doAverage = False)
+              name = fileNameList[idx_sfList]
+
+
+        effminmax =  findMinMax_v2( effDataList )
+        effiMin = effminmax[0]
+        effiMax = effminmax[1]
+
+        sfminmax =  findMinMax( sfList )
+        sfMin = sfminmax[0]
+
+        for key in sorted(effDataList.keys()):
+            grBinsEffData = effUtil.makeTGraphAsymErrorFromList(effDataList[key], 'min', 'max')
+            grBinsSF      = effUtil.makeTGraphFromList(sfList[key]     , 'min', 'max')
+            grBinsEffMC = None
+            if not effMCList is None:
+                grBinsEffMC = effUtil.makeTGraphFromList(effMCList[key], 'min', 'max') # use symmetric error for scale factor plot
+                grBinsEffMC.SetLineColor( rt.kBlack )
+                grBinsEffMC.SetMarkerStyle( 24 )
+                grBinsEffMC.SetLineWidth( 1 )
+
+            grBinsSF     .SetMarkerColor( graphColors[igr] )
+            grBinsSF     .SetLineColor(   graphColors[igr] )
+            grBinsSF     .SetLineWidth(2)
+            grBinsEffData.SetMarkerColor( graphColors[igr] )
+            grBinsEffData.SetLineColor(   graphColors[igr] )
+            grBinsEffData.SetLineWidth(2)
+
+            grBinsEffData.GetHistogram().SetMinimum(effiMin)
+            grBinsEffData.GetHistogram().SetMaximum(effiMax)
+
+            grBinsEffData.GetHistogram().GetXaxis().SetLimits(xMin,xMax)
+            grBinsSF.GetHistogram()     .GetXaxis().SetLimits(xMin,xMax)
+            grBinsSF.GetHistogram().SetMinimum(sfMin)
+            grBinsSF.GetHistogram().SetMaximum(sfMax)
+
+            grBinsSF.GetHistogram().GetXaxis().SetTitleOffset(1)
+            if 'eta' in xAxis or 'Eta' in xAxis:
+                grBinsSF.GetHistogram().GetXaxis().SetTitle("SC #eta")
+            elif 'pt' in xAxis or 'pT' in xAxis:
+                grBinsSF.GetHistogram().GetXaxis().SetTitle("SC E_{T}  [GeV]")
+            elif 'vtx' in xAxis or 'Vtx' in xAxis or 'PV' in xAxis:
+                grBinsSF.GetHistogram().GetXaxis().SetTitle("N_{vtx}")
+            elif 'phi' in xAxis or 'Phi' in xAxis:
+                grBinsSF.GetHistogram().GetXaxis().SetTitle("SC #phi")
+            elif 'z' in xAxis or 'Z' in xAxis :
+                grBinsSF.GetHistogram().GetXaxis().SetTitle("z [cm]")
+
+            grBinsSF.GetHistogram().GetYaxis().SetTitle("Data / MC " )
+            grBinsSF.GetHistogram().GetYaxis().SetTitleOffset(1)
+
+            grBinsEffData.GetHistogram().GetYaxis().SetTitleOffset(1)
+            grBinsEffData.GetHistogram().GetYaxis().SetTitle("Efficiency" )
+            grBinsEffData.GetHistogram().GetYaxis().SetRangeUser( effiMin, effiMax )
+
+            ### to avoid loosing the TGraph keep it in memory by adding it to a list
+            listOfTGraph1.append( grBinsEffData )
+            listOfTGraph2.append( grBinsSF )
+            listOfMC.append( grBinsEffMC   )
+
+            if 'eta' in yAxis or 'Eta' in yAxis:
+                #leg.AddEntry( grBinsEffData, '%1.3f #leq | #eta | #leq  %1.3f' % (float(key[0]),float(key[1])), "PL")        
+                leg.AddEntry( grBinsEffData,  name, "PL")
+                #leg.AddEntry( grBinsEffData, "2017 (35.8 /fb)", "PL")        
+            elif 'pt' in yAxis or 'pT' in yAxis:
+                #leg.AddEntry( grBinsEffData, '%3.0f #leq p_{T} #leq  %3.0f GeV' % (float(key[0]),float(key[1])), "PL")        
+                leg.AddEntry( grBinsEffData, name, "PL")
+                #leg.AddEntry( grBinsEffData, "2017 (35.8 /fb)", "PL")        
+            elif 'vtx' in yAxis or 'Vtx' in yAxis or 'PV' in yAxis:
+                leg.AddEntry( grBinsEffData, '%3.0f #leq nVtx #leq  %3.0f'      % (float(key[0]),float(key[1])), "PL")  
+
+        idx_sfList = idx_sfList + 1
+
+    if not effMCList is None:
+       leg.AddEntry( grBinsEffMC, 'MC', "PL")
+
+    for igr in range(len(listOfTGraph1)+1):
+
+        option = "PE"
+        if igr == 1:
+            option = "APE"
+
+        use_igr = igr
+        if use_igr == len(listOfTGraph1):
+            use_igr = 0
+
+        listOfTGraph1[use_igr].SetLineColor(graphColors[use_igr])
+        listOfTGraph1[use_igr].SetMarkerColor(graphColors[use_igr])
+        #if not listOfMC[use_igr] is None:
+        #    listOfMC[use_igr].SetLineColor(graphColors[use_igr])
+
+        listOfTGraph1[use_igr].GetHistogram().SetMinimum(effiMin)
+        listOfTGraph1[use_igr].GetHistogram().SetMaximum(1.2)
+        if 'pT' not in xAxis : listOfTGraph1[use_igr].GetHistogram().SetMinimum(0.92)
+        if 'pT' not in xAxis : listOfTGraph1[use_igr].GetHistogram().SetMaximum(1.05)
+
+        #listOfTGraph1[use_igr].GetHistogram().SetMaximum(1.05) # et plot
+
+        listOfTGraph1[use_igr].GetHistogram().SetLabelSize(0)
+
+        p1.cd()
+        listOfTGraph1[use_igr].Draw(option)
+        if not listOfMC[use_igr] is None:
+            #listOfMC[use_igr].Draw("ez")
+            listOfMC[use_igr].Draw("pesame")
+
+        p2.cd()
+        listOfTGraph2[use_igr].SetLineColor(graphColors[use_igr])
+        listOfTGraph2[use_igr].SetMarkerColor(graphColors[use_igr])
+        listOfTGraph2[use_igr].GetHistogram().SetMinimum(sfMin)
+        listOfTGraph2[use_igr].GetHistogram().SetMaximum(sfMax)
+
+        listOfTGraph2[use_igr].GetHistogram().SetMinimum(0.87)
+        listOfTGraph2[use_igr].GetHistogram().SetMaximum(1.12)
+
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetLabelSize(0.1)
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetTitleSize(0.09)
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetTitleOffset(0.7)
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetLabelSize(0.1)
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetTitleSize(0.09)
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetTitleOffset(1.2)
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetNdivisions(505)
+
+        if 'pT' in xAxis or 'pt' in xAxis :
+            listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetMoreLogLabels()
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetNoExponent()
+        listOfTGraph2[use_igr].Draw(option)
+
+    lineAtOne = rt.TLine(xMin,1,xMax,1)
+    lineAtOne.SetLineStyle(rt.kDashed)
+    lineAtOne.SetLineWidth(2)
+
+    p2.cd()
+    lineAtOne.Draw()
+    p2.cd()
+    lineAtOne.Draw()
+
+    c.cd()
+    p2.Draw()
+    p1.Draw()
+
+    leg.Draw()
+
+    eb_ee = rt.TLatex()
+    if 'eta' not in xAxis :
+        eb_ee.SetTextSize(0.03)
+        if 'EB' == EB_or_EE : eb_ee.DrawLatex(0.65,0.9, "|#eta_{SC}| < 1.479") # for et plot
+        if 'EE' == EB_or_EE : eb_ee.DrawLatex(0.65,0.9, "|#eta_{SC}| > 1.479")
+
+        #if 'EB' == EB_or_EE : eb_ee.DrawLatex(0.52,0.9, "|#eta_{SC}| < 1.479")
+        #if 'EE' == EB_or_EE : eb_ee.DrawLatex(0.52,0.9, "|#eta_{SC}| > 1.479")
+
+    CMS_lumi.CMS_lumi(c, 4, 10)
+
+    c.Print(nameout)
+
+
 def EffiGraphAsymError1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', yAxis = 'eta'):
             
     W = 800
@@ -544,6 +775,89 @@ def doPlot(filein, lumi, axis = ['pT','eta'] ):
 
 
     cDummy.Print( pdfout + "]" )
+
+# for data comparisons
+def doPlots(filesin, lumi, axis = ['pT','eta'] ):
+
+    effGraphList = []
+    dataNameList = []
+
+    for filein in filesin :
+        fileWithEff = open(filein, 'r')
+        print 'open ' + filein
+
+        temp_effGraph = efficiencyList()
+        temp_name =  filein.replace('/','_').split('_')[7]
+
+        print " Opening file: %s (plot lumi: %3.1f)" % ( filein, lumi )
+        CMS_lumi.lumi_13TeV = "%+3.1f fb^{-1}" % lumi
+
+        if not os.path.exists( filein ) :
+            print 'file %s does not exist' % filein
+            sys.exit(1)
+
+        fileWithEff = open(filein, 'r')
+        effGraph = efficiencyList()
+
+        for line in fileWithEff :
+            modifiedLine = line.lstrip(' ').rstrip(' ').rstrip('\n')
+            numbers = modifiedLine.split('\t')
+
+            if len(numbers) > 0 and isFloat(numbers[0]):
+                etaKey = ( float(numbers[0]), float(numbers[1]) )
+                ptKey  = ( float(numbers[2]), min(500,float(numbers[3])) )
+
+                myeff = efficiency(ptKey,etaKey,
+                                   float(numbers[4]),float(numbers[5]),float(numbers[6] ),float(numbers[7] ),float(numbers[8]),float(numbers[9]),float(numbers[10] ),float(numbers[11] ),
+                                   float(numbers[12]),float(numbers[13]),float(numbers[14]),float(numbers[15]) )
+#                               float(numbers[8]),float(numbers[9]),float(numbers[10]), -1 )
+
+                #effGraph.addEfficiency(myeff)
+                temp_effGraph.addEfficiency(myeff)
+
+        fileWithEff.close()
+
+        dataNameList.append(temp_name)
+        effGraphList.append(temp_effGraph)
+
+        print " ------------------------------- "
+
+    #print "nameOutBase: " + filesin[0].split("/")[0] + "/" + filesin[0].split("/")[1] + "/" + filesin[0].split("/")[2] + "/" + filesin[0].split("/")[3] + "/" + filesin[0].split("/")[4]  
+    nameOutBase = filesin[0].split("/")[0] + "/" + filesin[0].split("/")[1] + "/" + filesin[0].split("/")[2] + "/" + filesin[0].split("/")[3] + "/" + filesin[0].split("/")[4] + "/"
+    pdfout = nameOutBase + 'egammaPlots.pdf' # name for the final plot with all data
+    print "pdf out: " + pdfout
+    #cDummy = rt.TCanvas()
+    #cDummy.Print( pdfout + "[" )
+
+
+    if axis[0] == 'vtx' or axis[0] == 'pT':
+
+       EffiGraph1D_multiData( effGraphList , #eff Data
+                    None,
+                    effGraphList , #SF
+                    pdfout,
+                    dataNameList ,
+                    xAxis = axis[0], yAxis = axis[1])
+
+       EffiGraph1D_multiData( effGraphList , #eff Data
+                    None,
+                    effGraphList , #SF
+                    pdfout + '_EE.png',
+                    dataNameList ,
+                    xAxis = axis[0], yAxis = axis[1],
+                    EB_or_EE = 'EE')
+
+    if axis[0] == 'eta':
+       EffiGraph1D_multiData( effGraphList , #eff Data
+                              None,
+                              effGraphList , #SF 
+                              pdfout,
+                              dataNameList,
+                              xAxis = axis[0], yAxis = axis[1] )
+
+
+
+    #cDummy.Print( pdfout + "]" )
 
 
 def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):

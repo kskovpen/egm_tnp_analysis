@@ -271,8 +271,8 @@ def getAllEffi( info, bindef ):
 
 def getAllCnCEffiAsymError( info, bindef ):
     effis = {}
-    if not info['mcNominal'] is None and os.path.isfile(info['mcNominal']):
-        rootfile = rt.TFile( info['mcNominal'], 'read' )
+    if not info['deNominator'] is None and os.path.isfile(info['deNominator']):
+        rootfile = rt.TFile( info['deNominator'], 'read' )
         hP = rootfile.Get('%s_Pass'%bindef['name'])
         hF = rootfile.Get('%s_Fail'%bindef['name'])
         bin1 = 1
@@ -282,9 +282,9 @@ def getAllCnCEffiAsymError( info, bindef ):
         nP = hP.IntegralAndError(bin1,bin2,eP)
         nF = hF.IntegralAndError(bin1,bin2,eF)
 
-        effis['mcNominal'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
+        effis['deNominator'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
         rootfile.Close()
-    else: effis['mcNominal'] = [-1,-1]
+    else: effis['deNominator'] = [-1,-1]
 
     if not info['dataNominal'] is None and os.path.isfile(info['dataNominal']):
         rootfile = rt.TFile( info['dataNominal'], 'read' )

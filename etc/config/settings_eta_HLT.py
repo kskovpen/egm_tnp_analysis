@@ -44,39 +44,16 @@ tnpTreeDir = 'tnpEleTrig'
 
 samplesDef = {
     'data'   : tnpSamples.EGamma2018_test['data_Run2018Av1'].clone(),
-    'mcNom'  : tnpSamples.EGamma2018_test['DY_madgraph_Winter17'].clone(),
+    'data1'   : tnpSamples.EGamma2018_test['data_Run2018Av2'].clone(),
+    'data2'   : tnpSamples.EGamma2018_test['data_Run2018Av3'].clone(),
+    'dataToCompare'   : tnpSamples.EGamma2018_test['data_Run2018Av1'].clone(),
+    #'mcNom'  : tnpSamples.EGamma2018_test['DY_madgraph_Winter17'].clone(),
+    'mcNom'  : None,
     'mcAlt'  : None,
 #    'mcAlt'  : tnpSamples.Moriond17_80X['DYee_powheg_Winter17'].clone(),
     'tagSel' : None,
 }
 ## can add data sample easily
-
-
-
-## JH start
-
-"""
-tnpTreeDir = 'tnpEleIDs'
-
-samplesDef = {
-    'data'   : tnpSamples.Moriond17_80X_HN_leg1['data_Run2016H'].clone(),
-    'mcNom'  : tnpSamples.Moriond17_80X_HN_leg1['DY_madgraph_Winter17'].clone(),
-    'mcAlt'  : tnpSamples.Moriond17_80X_HN_leg1['DY_amcatnlo_Winter17'].clone(),
-#    'mcAlt'  : tnpSamples.Moriond17_80X['DYee_powheg_Winter17'].clone(),
-    'tagSel' : tnpSamples.Moriond17_80X_HN_leg1['DY_madgraph_Winter17'].clone(),
-}
-## can add data sample easily
-samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016G'] )
-samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016F'] )
-samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016E'] )
-samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016D'] )
-samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016C'] )
-samplesDef['data'].add_sample( tnpSamples.Moriond17_80X_HN_leg1['data_Run2016B'] )
-
-"""
-
-## JH end
-
 
 ## some sample-based cuts... general cuts defined here after
 ## require mcTruth on MC DY samples and additional cuts

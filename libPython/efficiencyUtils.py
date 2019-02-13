@@ -360,7 +360,7 @@ class efficiencyList:
         return h2
         
                                 
-    def pt_1DGraph_list(self, doScaleFactor, doAverage):
+    def pt_1DGraph_list(self, doScaleFactor, doAverage, isBE = True):
 #        self.symmetrizeSystVsEta()
         if doAverage: 
            self.combineSyst()
@@ -397,6 +397,9 @@ class efficiencyList:
                        listOfGraphs[etaBin].append( {'min': ptBin[0], 'max': ptBin[1],
                                                   'val': aValue  , 'err': anError } ) 
                 if not doAverage:
+                       if isBE and etaBin[1] > 1.479: continue # 
+                       if not isBE and etaBin[0] == 0.: continue # 
+
                        etaBinPlus  = etaBin
                  
                        effPlus  = self.effList[ptBin][etaBinPlus]
@@ -417,7 +420,7 @@ class efficiencyList:
                                                   
         return listOfGraphs
 
-    def pt_1DGraphAsymError_list(self, doScaleFactor, doAverage):
+    def pt_1DGraphAsymError_list(self, doScaleFactor, doAverage, isBE = True):
 #        self.symmetrizeSystVsEta()
         if doAverage:
            self.combineSyst()
@@ -462,6 +465,9 @@ class efficiencyList:
                            listOfGraphs[etaBin].append( {'min': ptBin[0], 'max': ptBin[1],
                                                       'val': aValue  , 'err': anError} )
                 if not doAverage:
+                       if isBE and etaBin[1] > 1.479: continue # 
+                       if not isBE and etaBin[0] == 0.: continue # 
+
                        etaBinPlus  = etaBin
 
                        effPlus  = self.effList[ptBin][etaBinPlus]

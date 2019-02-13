@@ -27,7 +27,7 @@ flags = {
 #baseOutDir = 'results/Moriond17/tnpEleID/HN/' # Heavy-Neutrino SF job. pu-tree is not updated yet.
 #baseOutDir = 'results/Moriond17/tnpEleID/HN_v2/' # Heavy-Neutrino SF job. pu-tree was updated.
 #baseOutDir = 'results/Moriond17/tnpEleID/HNEleID/' # Heavy-Neutrino SF job. pu-tree was updated. Test several mvacut.
-baseOutDir = 'results/EGamma2018/tnpEleTrig/et/' # JH
+baseOutDir = 'results/EGamma2018/tnpEleTrig/et' # JH
 
 
 #############################################################
@@ -44,7 +44,11 @@ tnpTreeDir = 'tnpEleTrig'
 
 samplesDef = {
     'data'   : tnpSamples.EGamma2018_test['data_Run2018Av1'].clone(),
-    'mcNom'  : tnpSamples.EGamma2018_test['DY_madgraph_Winter17'].clone(),
+    'data1'   : tnpSamples.EGamma2018_test['data_Run2018Av2'].clone(),
+    'data2'   : tnpSamples.EGamma2018_test['data_Run2018Av3'].clone(),
+    'dataToCompare'   : tnpSamples.EGamma2018_test['data_Run2018Av1'].clone(),
+    #'mcNom'  : tnpSamples.EGamma2018_test['DY_madgraph_Winter17'].clone(),
+    'mcNom'  : None,
     'mcAlt'  : None,
 #    'mcAlt'  : tnpSamples.Moriond17_80X['DYee_powheg_Winter17'].clone(),
     'tagSel' : None,
