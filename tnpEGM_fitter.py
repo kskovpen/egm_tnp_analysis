@@ -234,95 +234,95 @@ if args.sumUp:
 ####################################################################
 if args.doCutCount:
 
-    dataList = [] # make list for the comparison between data
+#    dataList = [] # make list for the comparison between data
+#
+#    for sampleType in tnpConf.samplesDef.keys():
+#        sample =  tnpConf.samplesDef[sampleType]
+#        if sample is None : continue
+#        if sampleType == args.sample or args.sample == 'all' :
+#            print 'creating histogram for sample '
+#            sample.dump()
+#            var = { 'name' : 'pair_mass', 'nbins' : 60, 'min' : 60, 'max': 120 }
+#            if sample.mcTruth:
+#                var = { 'name' : 'pair_mass', 'nbins' : 60, 'min' : 60, 'max': 120 }
+#            else:
+#               if not sampleType == "dataToCompare":
+#                  dataList.append(sample.histFile)
+#                  tnpRoot.makePassFailHistograms( sample, tnpConf.flags[args.flag], tnpBins, var ) # create root root file with histograms
+#
+#
+#    #dataList = ['results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//data_Run2018test_passTrackIsoLeg1.root', 'results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//data_Run2017_passTrackIsoLeg1.root', 'results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//data_Run2016_passTrackIsoLeg1.root']
+#    fOutList = [] # list of efficiency txt files
+#
+#    # make efficiency txt files for each datum
+#    for datumList in dataList :
+#        denomName = ''
+#        print "data name check " + datumList
+#        info = {
+#            'dataNominal' : datumList,
+#            'dataAltSig'  : None ,
+#            'dataAltBkg'  : None,
+#            'denominator'   : None, # denominator for the ratio plot can be data or mc
+#            'mcAlt'       : None,
+#            'tagSel'      : None
+#            }
+#
+#        if not tnpConf.samplesDef['mcNom' ] is None:
+#            info['denominator'    ] = tnpConf.samplesDef['mcNom' ].histFile
+#            denomName = tnpConf.samplesDef['mcNom' ].name
+#        if not tnpConf.samplesDef['dataToCompare' ] is None:
+#            info['denominator'    ] = tnpConf.samplesDef['dataToCompare' ].histFile
+#            denomName = tnpConf.samplesDef['dataToCompare' ].name
+#        if not tnpConf.samplesDef['mcAlt' ] is None:
+#            info['mcAlt'    ] = tnpConf.samplesDef['mcAlt' ].histFile
+#        if not tnpConf.samplesDef['tagSel'] is None:
+#            info['tagSel'   ] = tnpConf.samplesDef['tagSel'].histFile
+#
+#        effis = None
+#        # results/EGamma2018/tnpEleTrig/eta/passingHLTleg1//data_Run2018Av1_passingHLTleg1.root
+#        # ex) datumList.split('/')[6] is data_Run2018Av1_passingHLTleg1.root
+#        effFileName ='%s/egammaEffi%s.txt' % (outputDirectory, (datumList.split('/')[6]).split('.root')[0] + '_' + denomName)
+#        fOut = open( effFileName,'w')
+#        fOutList.append(effFileName)
+#       
+#        for ib in range(len(tnpBins['bins'])):
+#            effis = tnpRoot.getAllCnCEffiAsymError( info, tnpBins['bins'][ib] )
+#
+#            ### formatting assuming 2D bining -- to be fixed        
+#            v1Range = tnpBins['bins'][ib]['title'].split(';')[1].split('<')
+#            v2Range = tnpBins['bins'][ib]['title'].split(';')[2].split('<')
+#            if ib == 0 :
+#                astr = '### var1 : %s' % v1Range[1]
+#                print astr
+#                fOut.write( astr + '\n' )
+#                astr = '### var2 : %s' % v2Range[1]
+#                print astr
+#                fOut.write( astr + '\n' )
+#                
+#            astr =  '%+8.3f\t%+8.3f\t%+8.3f\t%+8.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f' % (
+#                float(v1Range[0]), float(v1Range[2]),
+#                float(v2Range[0]), float(v2Range[2]),
+#                # included the third and fourth element for asymmetric low/upper error 
+#                effis['dataNominal'][0],effis['dataNominal'][1],effis['dataNominal'][2],effis['dataNominal'][3],
+#                effis['denominator'  ][0],effis['denominator'  ][1],effis['denominator'  ][2],effis['denominator'  ][3],
+#                effis['dataAltBkg' ][0],
+#                effis['dataAltSig' ][0],
+#                effis['mcAlt' ][0],
+#                effis['tagSel'][0],
+#                )
+#            print astr
+#            fOut.write( astr + '\n' )
+#        fOut.close()
+#
+#        print 'Effis saved in file : ',  effFileName
 
-    for sampleType in tnpConf.samplesDef.keys():
-        sample =  tnpConf.samplesDef[sampleType]
-        if sample is None : continue
-        if sampleType == args.sample or args.sample == 'all' :
-            print 'creating histogram for sample '
-            sample.dump()
-            var = { 'name' : 'pair_mass', 'nbins' : 60, 'min' : 60, 'max': 120 }
-            if sample.mcTruth:
-                var = { 'name' : 'pair_mass', 'nbins' : 60, 'min' : 60, 'max': 120 }
-            else:
-               if not sampleType == "dataToCompare":
-                  dataList.append(sample.histFile)
-                  tnpRoot.makePassFailHistograms( sample, tnpConf.flags[args.flag], tnpBins, var ) # create root root file with histograms
-
-
-    fOutList = [] # list of efficiency txt files
-
-    # make efficiency txt files for each datum
-    for datumList in dataList :
-        print "data name check " + datumList
-        info = {
-            #'data'        : tnpConf.samplesDef['data'].histFile,
-            #'dataNominal' : tnpConf.samplesDef['data'].histFile,
-            'dataNominal' : datumList,
-            'dataAltSig'  : None ,
-            'dataAltBkg'  : None,
-            #'mcNominal'   : tnpConf.samplesDef['mcNom'].histFile,
-            'deNominator'   : None, # denominator for the ratio plot can be data or mc
-            'mcAlt'       : None,
-            'tagSel'      : None
-            }
-
-        if not tnpConf.samplesDef['mcNom' ] is None:
-            info['deNominator'    ] = tnpConf.samplesDef['mcNom' ].histFile
-        if not tnpConf.samplesDef['dataToCompare' ] is None:
-            info['deNominator'    ] = tnpConf.samplesDef['dataToCompare' ].histFile
-        if not tnpConf.samplesDef['mcAlt' ] is None:
-            info['mcAlt'    ] = tnpConf.samplesDef['mcAlt' ].histFile
-        if not tnpConf.samplesDef['tagSel'] is None:
-            info['tagSel'   ] = tnpConf.samplesDef['tagSel'].histFile
-
-        effis = None
-        # results/EGamma2018/tnpEleTrig/eta/passingHLTleg1//data_Run2018Av1_passingHLTleg1.root
-        # ex) datumList.split('/')[6] is data_Run2018Av1_passingHLTleg1.root
-        effFileName ='%s/egammaEffi%s.txt' % (outputDirectory, (datumList.split('/')[6]).split('.root')[0])
-        fOut = open( effFileName,'w')
-        fOutList.append(effFileName)
-       
-        for ib in range(len(tnpBins['bins'])):
-            #effis = tnpRoot.getAllCnCEffi( info, tnpBins['bins'][ib] )
-            effis = tnpRoot.getAllCnCEffiAsymError( info, tnpBins['bins'][ib] )
-
-            ### formatting assuming 2D bining -- to be fixed        
-            v1Range = tnpBins['bins'][ib]['title'].split(';')[1].split('<')
-            v2Range = tnpBins['bins'][ib]['title'].split(';')[2].split('<')
-            if ib == 0 :
-                astr = '### var1 : %s' % v1Range[1]
-                print astr
-                fOut.write( astr + '\n' )
-                astr = '### var2 : %s' % v2Range[1]
-                print astr
-                fOut.write( astr + '\n' )
-                
-            astr =  '%+8.3f\t%+8.3f\t%+8.3f\t%+8.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f' % (
-                float(v1Range[0]), float(v1Range[2]),
-                float(v2Range[0]), float(v2Range[2]),
-                # included the third and fourth element for asymmetric low/upper error 
-                effis['dataNominal'][0],effis['dataNominal'][1],effis['dataNominal'][2],effis['dataNominal'][3],
-                effis['deNominator'  ][0],effis['deNominator'  ][1],effis['deNominator'  ][2],effis['deNominator'  ][3],
-                effis['dataAltBkg' ][0],
-                effis['dataAltSig' ][0],
-                effis['mcAlt' ][0],
-                effis['tagSel'][0],
-                )
-            print astr
-            fOut.write( astr + '\n' )
-        fOut.close()
-
-        print 'Effis saved in file : ',  effFileName
-
+    fOutList = ['results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//egammaEffidata_Run2018test_passTrackIsoLeg1_data_Run2016.txt','results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//egammaEffidata_Run2017_passTrackIsoLeg1_data_Run2016.txt','results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//egammaEffidata_Run2016_passTrackIsoLeg1_data_Run2016.txt'] # list of efficiency txt files
     import libPython.EGammaID_scaleFactors as egm_sf
     if not args.onlyDoPlot:
        egm_sf.doEGM_SFs(effFileName,sampleToFit.lumi) #FIXME: make a doEGM_SFs_cnc for cut and count method only
     if args.onlyDoPlot:
        if 'et' == args.plotX : egm_sf.doPlots(fOutList,sampleToFit.lumi) #efficienct vs pt
        if 'nvtx' == args.plotX : egm_sf.doPlots(fOutList,sampleToFit.lumi, ['vtx','eta']) #efficienct vs vtx
-       #if 'eta' == args.plotX : egm_sf.doPlot(effFileName,sampleToFit.lumi, ['eta','pT']) # efficiency vs eta 
        if 'eta' == args.plotX : egm_sf.doPlots(fOutList,sampleToFit.lumi, ['eta','pT']) # efficiency vs eta 
        
         

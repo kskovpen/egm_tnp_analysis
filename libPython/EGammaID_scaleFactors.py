@@ -287,7 +287,7 @@ def EffiGraph1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', yAxis = '
 
     #################################################    
 
-def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameList, xAxis = 'pT', yAxis = 'eta', EB_or_EE = 'EB'):
+def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameList, denomNameList, xAxis = 'pT', yAxis = 'eta', EB_or_EE = 'EB'):
 
     W = 800
     H = 800
@@ -319,6 +319,7 @@ def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameLis
     igr = 0
     listOfTGraph1 = []
     listOfTGraph2 = []
+    listOfTGraph2_ = []
     listOfMC      = []
 
     xMin = 10
@@ -360,10 +361,10 @@ def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameLis
               name = fileNameList[idx_sfList]
         elif 'eta' in xAxis :
               effDataList = list_.eta_1DGraphAsymError_list( typeGR =  0 , doAverage = False)
-              effMCList = list_.eta_1DGraphAsymError_list( typeGR = -1 , doAverage = False)
+              #effMCList = list_.eta_1DGraphAsymError_list( typeGR = -1 , doAverage = False)
+              effMCList = None
               sfList = sfLists[idx_sfList].eta_1DGraphAsymError_list( typeGR = +1 , doAverage = False)
               name = fileNameList[idx_sfList]
-
 
         effminmax =  findMinMax_v2( effDataList )
         effiMin = effminmax[0]
@@ -409,7 +410,7 @@ def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameLis
             elif 'z' in xAxis or 'Z' in xAxis :
                 grBinsSF.GetHistogram().GetXaxis().SetTitle("z [cm]")
 
-            grBinsSF.GetHistogram().GetYaxis().SetTitle("Data / MC " )
+            grBinsSF.GetHistogram().GetYaxis().SetTitle("Data/ " + denomNameList[idx_sfList] )
             grBinsSF.GetHistogram().GetYaxis().SetTitleOffset(1)
 
             grBinsEffData.GetHistogram().GetYaxis().SetTitleOffset(1)
@@ -421,14 +422,15 @@ def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameLis
             listOfTGraph2.append( grBinsSF )
             listOfMC.append( grBinsEffMC   )
 
+            # check if the ratio is ratio of itself, and if true don't draw the ratio graph
+            if fileNameList[idx_sfList] == denomNameList[idx_sfList] : 
+               listOfTGraph2_.append( False )
+            else : listOfTGraph2_.append( True )
+
             if 'eta' in yAxis or 'Eta' in yAxis:
-                #leg.AddEntry( grBinsEffData, '%1.3f #leq | #eta | #leq  %1.3f' % (float(key[0]),float(key[1])), "PL")        
                 leg.AddEntry( grBinsEffData,  name, "PL")
-                #leg.AddEntry( grBinsEffData, "2017 (35.8 /fb)", "PL")        
             elif 'pt' in yAxis or 'pT' in yAxis:
-                #leg.AddEntry( grBinsEffData, '%3.0f #leq p_{T} #leq  %3.0f GeV' % (float(key[0]),float(key[1])), "PL")        
                 leg.AddEntry( grBinsEffData, name, "PL")
-                #leg.AddEntry( grBinsEffData, "2017 (35.8 /fb)", "PL")        
             elif 'vtx' in yAxis or 'Vtx' in yAxis or 'PV' in yAxis:
                 leg.AddEntry( grBinsEffData, '%3.0f #leq nVtx #leq  %3.0f'      % (float(key[0]),float(key[1])), "PL")  
 
@@ -437,11 +439,15 @@ def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameLis
     if not effMCList is None:
        leg.AddEntry( grBinsEffMC, 'MC', "PL")
 
-    for igr in range(len(listOfTGraph1)+1):
+    #for igr in range(len(listOfTGraph1)+1):
+    for igr in range(len(listOfTGraph1)):
 
-        option = "PE"
-        if igr == 1:
-            option = "APE"
+        option = "APE"
+        #if igr == 1:
+        #    option = "APE" # Don't know why axis is drawn in the second graph. I changed to draw axis in the first graph, and looks ok now.
+
+        if not igr == 0:
+            option = "PE"
 
         use_igr = igr
         if use_igr == len(listOfTGraph1):
@@ -461,6 +467,12 @@ def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameLis
 
         listOfTGraph1[use_igr].GetHistogram().SetLabelSize(0)
 
+        listOfTGraph1[use_igr].GetHistogram().GetYaxis().SetLabelFont(63)
+        listOfTGraph1[use_igr].GetHistogram().GetYaxis().SetLabelSize(30)
+        listOfTGraph1[use_igr].GetHistogram().GetYaxis().SetTitleFont(63)
+        listOfTGraph1[use_igr].GetHistogram().GetYaxis().SetTitleSize(30)
+        listOfTGraph1[use_igr].GetHistogram().GetYaxis().SetTitleOffset(1.5)
+
         p1.cd()
         listOfTGraph1[use_igr].Draw(option)
         if not listOfMC[use_igr] is None:
@@ -476,18 +488,23 @@ def EffiGraph1D_multiData(effDataLists, effMCList, sfLists ,nameout, fileNameLis
         listOfTGraph2[use_igr].GetHistogram().SetMinimum(0.87)
         listOfTGraph2[use_igr].GetHistogram().SetMaximum(1.12)
 
-        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetLabelSize(0.1)
-        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetTitleSize(0.09)
-        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetTitleOffset(0.7)
-        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetLabelSize(0.1)
-        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetTitleSize(0.09)
-        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetTitleOffset(1.2)
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetLabelFont(63)
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetLabelSize(30)
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetTitleFont(63)
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetTitleSize(30)
+        listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetTitleOffset(1.5)
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetLabelFont(63)
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetLabelSize(25)
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetTitleFont(63)
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetTitleSize(30)
+        listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetTitleOffset(3.5)
         listOfTGraph2[use_igr].GetHistogram().GetYaxis().SetNdivisions(505)
 
         if 'pT' in xAxis or 'pt' in xAxis :
             listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetMoreLogLabels()
         listOfTGraph2[use_igr].GetHistogram().GetXaxis().SetNoExponent()
-        listOfTGraph2[use_igr].Draw(option)
+        if listOfTGraph2_[use_igr] : 
+           listOfTGraph2[use_igr].Draw(option)
 
     lineAtOne = rt.TLine(xMin,1,xMax,1)
     lineAtOne.SetLineStyle(rt.kDashed)
@@ -781,6 +798,7 @@ def doPlots(filesin, lumi, axis = ['pT','eta'] ):
 
     effGraphList = []
     dataNameList = []
+    denomNameList = []
 
     for filein in filesin :
         fileWithEff = open(filein, 'r')
@@ -788,6 +806,8 @@ def doPlots(filesin, lumi, axis = ['pT','eta'] ):
 
         temp_effGraph = efficiencyList()
         temp_name =  filein.replace('/','_').split('_')[7]
+        temp_denomname =  (filein.replace('/','_').split('_')[10]).split('.txt')[0]
+        print "temp_name: " + temp_name + " temp_denomname: " + temp_denomname
 
         print " Opening file: %s (plot lumi: %3.1f)" % ( filein, lumi )
         CMS_lumi.lumi_13TeV = "%+3.1f fb^{-1}" % lumi
@@ -818,6 +838,7 @@ def doPlots(filesin, lumi, axis = ['pT','eta'] ):
         fileWithEff.close()
 
         dataNameList.append(temp_name)
+        denomNameList.append(temp_denomname)
         effGraphList.append(temp_effGraph)
 
         print " ------------------------------- "
@@ -837,13 +858,15 @@ def doPlots(filesin, lumi, axis = ['pT','eta'] ):
                     effGraphList , #SF
                     pdfout,
                     dataNameList ,
+                    denomNameList ,
                     xAxis = axis[0], yAxis = axis[1])
 
        EffiGraph1D_multiData( effGraphList , #eff Data
                     None,
                     effGraphList , #SF
-                    pdfout + '_EE.png',
+                    pdfout + '_EE.pdf',
                     dataNameList ,
+                    denomNameList ,
                     xAxis = axis[0], yAxis = axis[1],
                     EB_or_EE = 'EE')
 
@@ -853,6 +876,7 @@ def doPlots(filesin, lumi, axis = ['pT','eta'] ):
                               effGraphList , #SF 
                               pdfout,
                               dataNameList,
+                              denomNameList ,
                               xAxis = axis[0], yAxis = axis[1] )
 
 

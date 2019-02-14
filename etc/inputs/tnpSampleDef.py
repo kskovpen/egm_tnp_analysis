@@ -7,6 +7,8 @@ myinputDir_leg2 = '/data1/EGM_TnP/TnPTree/Dalmin/HN/Moriond17_GainSwitch_newTnP_
 myinputDir = '/data8/Users/jhkim/Moriond17_GainSwitch_newTnP_v5/'
 
 myinputDir_2018 = '/data8/Users/jhkim/2018Data/2018Data/'
+myinputDir_2018_temp = '/data8/Users/jhkim/2018Data/2018Data_v2/'
+myinputDir_2017_2016 = '/data8/Users/jhkim/2017_2016Data/'
 
 EGamma2018_test = {
     ### MiniAOD TnP for IDs scale factors
@@ -14,9 +16,28 @@ EGamma2018_test = {
                                        myinputDir_2018 + 'mc/CRAB_UserFiles/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8.root',
                                        isMC = True, nEvts = 49144274 ),
 
+    'data_Run2018test' : tnpSample('data_Run2018test' , myinputDir_2018_temp + 'RunDv2_temp/190213_192631/SingleElectron_2018_RunDv2_temp.root' , lumi = 5.788 ),
     'data_Run2018Av1' : tnpSample('data_Run2018Av1' , myinputDir_2018 + 'data/EGamma/TnPTree_SingleElectron_2018rereco_RunAv1.root' , lumi = 5.788 ),
     'data_Run2018Av2' : tnpSample('data_Run2018Av2' , myinputDir_2018 + 'data/EGamma/TnPTree_SingleElectron_2018rereco_RunAv2.root' , lumi = 5.788 ),
     'data_Run2018Av3' : tnpSample('data_Run2018Av3' , myinputDir_2018 + 'data/EGamma/TnPTree_SingleElectron_2018rereco_RunAv3.root' , lumi = 5.788 ),
+    }
+
+EGamma2017 = {
+    ### MiniAOD TnP for IDs scale factors
+    #'DY_madgraph_Winter17' : tnpSample('DY_madgraph_Winter17',
+    #                                   myinputDir_2018 + 'mc/CRAB_UserFiles/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8.root',
+    #                                   isMC = True, nEvts = 49144274 ),
+
+    'data_Run2017' : tnpSample('data_Run2017' , myinputDir_2017_2016 + 'data/SingleElectron_2017/SingleElectron_2017B-F_HLT_Double.root', lumi = 1.0),
+    }
+
+EGamma2016 = {
+    ### MiniAOD TnP for IDs scale factors
+    #'DY_madgraph_Winter17' : tnpSample('DY_madgraph_Winter17',
+    #                                   myinputDir_2018 + 'mc/CRAB_UserFiles/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8.root',                              
+    #                                   isMC = True, nEvts = 49144274 ),
+    
+    'data_Run2016' : tnpSample('data_Run2016' , myinputDir_2017_2016 + 'data/SingleElectron_2016/SingleElectron_2016Bv2-H_HLT_Double.root', lumi = 1.0),
     }
 
 

@@ -130,9 +130,16 @@ def computeEffiAsymError_cnc(n1,n2,e1,e2):
     grEff = rt.TGraphAsymmErrors(htemp_nom,htemp_denom,"cl=0.683 b(1,1) mode")
 
     eff_ = grEff.GetY()
-    eff = eff_[0]
-    high = grEff.GetErrorYhigh(0)
-    low = grEff.GetErrorYlow(0)
+
+    if not n1+n2 == 0: eff = eff_[0]
+    else : eff = 0
+
+    if not n1+n2 == 0:
+       high = grEff.GetErrorYhigh(0)
+       low = grEff.GetErrorYlow(0)
+    else : 
+       high = 0
+       low = 0
 
     if eff < 1e-3: eff = 1e-3 # just to avoid zero in denominator
     if high < 1e-3: high = 1e-3
@@ -271,8 +278,8 @@ def getAllEffi( info, bindef ):
 
 def getAllCnCEffiAsymError( info, bindef ):
     effis = {}
-    if not info['deNominator'] is None and os.path.isfile(info['deNominator']):
-        rootfile = rt.TFile( info['deNominator'], 'read' )
+    if not info['denominator'] is None and os.path.isfile(info['denominator']):
+        rootfile = rt.TFile( info['denominator'], 'read' )
         hP = rootfile.Get('%s_Pass'%bindef['name'])
         hF = rootfile.Get('%s_Fail'%bindef['name'])
         bin1 = 1
@@ -282,9 +289,9 @@ def getAllCnCEffiAsymError( info, bindef ):
         nP = hP.IntegralAndError(bin1,bin2,eP)
         nF = hF.IntegralAndError(bin1,bin2,eF)
 
-        effis['deNominator'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
+        effis['denominator'] = computeEffiAsymError_cnc(nP,nF,eP,eF)
         rootfile.Close()
-    else: effis['deNominator'] = [-1,-1]
+    else: effis['denominator'] = [-1,-1,-1,-1]
 
     if not info['dataNominal'] is None and os.path.isfile(info['dataNominal']):
         rootfile = rt.TFile( info['dataNominal'], 'read' )
