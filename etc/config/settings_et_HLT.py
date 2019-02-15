@@ -29,7 +29,7 @@ samplesDef = {
     #'data2'   : tnpSamples.EGamma2018_test['data_Run2018Av3'].clone(),
     #'dataToCompare'   : tnpSamples.EGamma2018_test['data_Run2018Av1'].clone(),
 
-    'data'   : tnpSamples.EGamma2018_test['data_Run2018test'].clone(),
+    'data'   : tnpSamples.EGamma2018['data_Run2018'].clone(),
     'data1'   : tnpSamples.EGamma2017['data_Run2017'].clone(),
     'data2'   : tnpSamples.EGamma2016['data_Run2016'].clone(),
     'dataToCompare'   : tnpSamples.EGamma2016['data_Run2016'].clone(),

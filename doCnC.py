@@ -4,7 +4,6 @@ import os
 
 variables = ['eta','nvtx','et']
 #variables = ['et']
-#fittings = ['--checkBins', '--createBins', '--createHists', '--doCutCount']
 procedure = ['--checkBins --onlyDoPlot --plotX', '--createBins --onlyDoPlot --plotX', '--doCutCount --onlyDoPlot --plotX']
 
 for var in variables:
