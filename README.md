@@ -2,6 +2,60 @@
 
 In this branch, the cut and count option is privately included.
 
+
+## Quick instructions for 2018HLT_UL_cutAndCount branch
+
+This branch of the egm_tnp_analysis.git is based on previous code from Junho.
+It is a working setup, though at some point needs to get cleaned-up and improved in code readability.
+
+### 1.
+
+Create trees using https://github.com/tomcornelis/EgammaAnalysis-TnPTreeProducer/tree/Nm1_proposedUpdates
+
+In case you want to run in CMSSW_10_6_X or later instead of CMSSW_10_2_X, take into account these changes:
+https://github.com/tomcornelis/EgammaAnalysis-TnPTreeProducer/commit/1cbf97cdcfec0ea33c981ae24d8c4f10b3b3f8f4
+
+### 2.
+Install this repository
+
+```
+rel CMSSW_10_2_5
+cd CMSSW_10_2_5/src
+cmsenv
+git clone -b 2018HLT_UL_cutAndCount https://github.com/tomcornelis/egm_tnp_analysis.git
+scram b -j8
+```
+
+### 3.
+
+Setup the produced trees in etc/inputs/tnpSampleDef.py and check the configs in etc/config/.
+Following configs were used for the UL validation:
+```
+etc/config/settings_et_HLT_UL.py
+etc/config/settings_eta_HLT_UL.py
+etc/config/settings_nvtx_HLT_UL.py
+etc/config/settings_phi_HLT_UL.py
+```
+
+### 4.
+
+Run
+```
+python doUL.py
+```
+which goes over all combinations of plots, filters etc...
+
+
+
+
+
+
+
+
+
+
+Old readme stuff below for reference:
+
 ## Install egm_tnp_Moriond17_v2.0_cnc branch
 
 > git clone git@github.com:jhkim06/egm_tnp_analysis.git

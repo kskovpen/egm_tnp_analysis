@@ -52,6 +52,9 @@ def makePassFailHistograms( sample, flag, bindef, var ):
             cutPass = '( %s && %s )' % (cuts,    flag)
             cutFail = '( %s && %s )' % (cuts, notflag)
         
+        if hasattr(sample, 'is2018def') and sample.is2018def: # because the newer samples are slightly different in tree structure
+          cutPass = cutPass.replace('probe_sc', 'el_sc')
+          cutFail = cutFail.replace('probe_sc', 'el_sc')
         tree.Draw('%s >> %s' % (var['name'],hPass[ib].GetName()),cutPass,'goff')
         tree.Draw('%s >> %s' % (var['name'],hFail[ib].GetName()),cutFail,'goff')
 

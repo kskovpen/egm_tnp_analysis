@@ -20,6 +20,7 @@ parser.add_argument('--altBkg'     , action='store_true'  , help = 'alternate ba
 parser.add_argument('--doFit'      , action='store_true'  , help = 'fit sample (sample should be defined in settings.py)')
 parser.add_argument('--mcSig'      , action='store_true'  , help = 'fit MC nom [to init fit parama]')
 parser.add_argument('--doPlot'     , action='store_true'  , help = 'plotting')
+parser.add_argument('--fast'       , action='store_true'  , help = 'quick dirty hack to reuse existing txt files')
 parser.add_argument('--sumUp'      , action='store_true'  , help = 'sum up efficiencies')
 parser.add_argument('--iBin'       , dest = 'binNumber'   , type = int,  default=-1, help='bin number (to refit individual bin)')
 parser.add_argument('--flag'       , default = None       , help ='WP to test')
@@ -233,7 +234,9 @@ if args.sumUp:
 ##### dumping egamma txt file (cut and count) 
 ####################################################################
 if args.doCutCount:
-
+    print
+    print
+    print
     dataList = [] # make list for the comparison between data
 
     for sampleType in tnpConf.samplesDef.keys():
@@ -248,7 +251,7 @@ if args.doCutCount:
             else:
                if not sampleType == "dataToCompare":
                   dataList.append(sample.histFile)
-                  tnpRoot.makePassFailHistograms( sample, tnpConf.flags[args.flag], tnpBins, var ) # create root root file with histograms
+                  if not args.fast: tnpRoot.makePassFailHistograms( sample, tnpConf.flags[args.flag], tnpBins, var ) # create root root file with histograms
 
 
     #dataList = ['results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//data_Run2018test_passTrackIsoLeg1.root', 'results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//data_Run2017_passTrackIsoLeg1.root', 'results/EGamma2018/tnpEleTrig/et/passTrackIsoLeg1//data_Run2016_passTrackIsoLeg1.root']
@@ -282,8 +285,9 @@ if args.doCutCount:
         # results/EGamma2018/tnpEleTrig/eta/passingHLTleg1//data_Run2018Av1_passingHLTleg1.root
         # ex) datumList.split('/')[6] is data_Run2018Av1_passingHLTleg1.root
         effFileName ='%s/egammaEffi%s.txt' % (outputDirectory, (datumList.split('/')[6]).split('.root')[0] + '_' + denomName)
-        fOut = open( effFileName,'w')
         fOutList.append(effFileName)
+        if args.fast: continue
+        fOut = open( effFileName,'w')
        
         for ib in range(len(tnpBins['bins'])):
             effis = tnpRoot.getAllCnCEffiAsymError( info, tnpBins['bins'][ib] )
@@ -293,10 +297,10 @@ if args.doCutCount:
             v2Range = tnpBins['bins'][ib]['title'].split(';')[2].split('<')
             if ib == 0 :
                 astr = '### var1 : %s' % v1Range[1]
-                print astr
+         #       print astr
                 fOut.write( astr + '\n' )
                 astr = '### var2 : %s' % v2Range[1]
-                print astr
+       #         print astr
                 fOut.write( astr + '\n' )
                 
             astr =  '%+8.3f\t%+8.3f\t%+8.3f\t%+8.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f' % (
@@ -310,7 +314,7 @@ if args.doCutCount:
                 effis['mcAlt' ][0],
                 effis['tagSel'][0],
                 )
-            print astr
+        #    print astr
             fOut.write( astr + '\n' )
         fOut.close()
 
@@ -324,6 +328,7 @@ if args.doCutCount:
        if 'et' == args.plotX : egm_sf.doPlots(fOutList,sampleToFit.lumi) #efficienct vs pt
        if 'nvtx' == args.plotX : egm_sf.doPlots(fOutList,sampleToFit.lumi, ['vtx','eta']) #efficienct vs vtx
        if 'eta' == args.plotX : egm_sf.doPlots(fOutList,sampleToFit.lumi, ['eta','pT']) # efficiency vs eta 
+       if 'phi' == args.plotX : egm_sf.doPlots(fOutList,sampleToFit.lumi, ['phi','eta']) # efficiency vs phi
        
         
 

@@ -9,7 +9,7 @@ UL = {
     '106Xv6rs': tnpSample('106Xv6(rs)', '/user/tomc/eleHLT/tnpTuples/UL/TnPTree_mc_PUpmx25ns_106X_upgrade2018_realistic_v6_ul18hlt_premix_rs-v1.root', isMC = True),
     }
 
-UL['data'].is2018def = True
+UL['data'].is2018def = True   # neede for all the newly produced samples to catch for a change in tree variable name
 UL['94X'].is2018def = True
 UL['102X'].is2018def = True
 UL['106Xv4'].is2018def = True
