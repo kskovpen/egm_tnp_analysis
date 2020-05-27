@@ -3,20 +3,20 @@
 
 ## Install stable branch
 
->git clone -b egm_tnp_CleanedCodeForUL_17March2020  https://github.com/lsoffi/egm_tnp_analysis
+```
+git clone -b egm_tnp_CleanedCodeForUL_17March2020  https://github.com/lsoffi/egm_tnp_analysis
+cd egm_tnp_analysis
+source etc/scripts/setup.sh
+make
+```
 
-> cd egm_tnp_analysis
-
-> source etc/scripts/setupUL.sh (need ROOT>6.10)
-
-> make
-
+> The latter two commands do not work on T2\_BE\_IIHE, they seem to be lxplus specific. I am actually not sure if they are really needed, this package seem to work as long as you have some python around.
 
 ## Quick description
 
 Package to handle analysis of tnp trees. The main tool is the python fitter
 
-   ===> tnpEGM_fitter.py
+   ===> tnpEGM\_fitter.py
 
 The interface between the user and the fitter is solely done via the settings file
 
@@ -28,12 +28,12 @@ The interface between the user and the fitter is solely done via the settings fi
 	- set the output directory
 
 Help message:
->    python tnpEGM_fitter.py --help 
+>    python tnpEGM\_fitter.py --help 
 
 The settings have always to be passed to the fitter
->    python tnpEGM_fitter.py etc/config/settings.py 
+>    python tnpEGM\_fitter.py etc/config/settings.py 
 
-Several "settings*.py" files are setup for different eras and are located all in etc/config/
+Several "settings\*.py" files are setup for different eras and are located all in etc/config/
 
 
 ## The different fitting steps
