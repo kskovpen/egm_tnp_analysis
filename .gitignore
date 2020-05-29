@@ -1,0 +1,5 @@
+**/*.pyc
+**/*.pcm
+**/*.so
+**/*.d
+libPython/build/
