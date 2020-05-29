@@ -163,7 +163,11 @@ if  args.doPlot:
     plottingDir = '%s/plots/%s/%s' % (outputDirectory,sampleToFit.name,fitType)
     if not os.path.exists( plottingDir ):
         os.makedirs( plottingDir )
-    shutil.copy('etc/inputs/index.php.listPlots','%s/index.php' % plottingDir)
+
+    # copy index.php to all subdirectories
+    for i in range(1, len(plottingDir.split('/'))):
+      subdir = os.path.join(plottingDir.split('/')[:i])
+      shutil.copy('etc/inputs/index.php','%s/index.php' % subdir)
 
     for ib in range(len(tnpBins['bins'])):
         if (args.binNumber >= 0 and ib == args.binNumber) or args.binNumber < 0:
