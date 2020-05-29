@@ -2,13 +2,14 @@
 ########## General settings
 #############################################################
 # flag to be Tested
-
-# flag to be Tested
 flags = {
-    'passingLeptonMvaTight' : '(el_leptonMva_TOP > 0.95)',
+    'passingLeptonMvaTight'  : '(el_leptonMva_TOP > 0.95)',
+    'passingLeptonMvaMedium' : '(el_leptonMva_TOP > 0.4)',
     }
 
-baseOutDir = '/user/tomc/public_html/leptonSF/electrons/2016'
+era = '2016'
+
+baseOutDir = '/user/tomc/public_html/leptonSF/electrons/%s' % era
 
 #############################################################
 ########## samples definition  - preparing the samples
@@ -19,12 +20,33 @@ from etc.inputs.tnpSampleDef import getSample
 
 # all the samples MUST have different names (i.e. sample.name must be different for all)
 # if you need to use 2 times the same sample, then rename the second one
-samplesDef = {
-    'data'   : getSample(['Run2016B', 'Run2016C', 'Run2016D', 'Run2016E', 'Run2016F', 'Run2016G', 'Run2016H'], rename='2016'),
-    'mcNom'  : getSample('2016_DY_NLO'),
-    'mcAlt'  : getSample('2016_DY_LO'),
-    'tagSel' : getSample('2016_DY_NLO', rename='2016_DY_NLO_altTag'),
-}
+if era=='2016':
+  samplesDef = {
+      'data'   : getSample(['Run2016B', 'Run2016C', 'Run2016D', 'Run2016E', 'Run2016F', 'Run2016G', 'Run2016H'], rename='2016'),
+      'mcNom'  : getSample('2016_DY_NLO'),
+      'mcAlt'  : getSample('2016_DY_LO'),
+      'tagSel' : getSample('2016_DY_NLO', rename='2016_DY_NLO_altTag'),
+  }
+elif era=='2017':
+  samplesDef = {
+      'data'   : getSample(['Run2017B', 'Run2017C', 'Run2017D', 'Run2017E', 'Run2017F'], rename='2017'),
+      'mcNom'  : getSample(['2017_DY_NLO', '2017_DY_NLO_ext']),
+      'mcAlt'  : getSample(['2017_DY1_LO', '2017_DY1_LO_ext']),
+      'tagSel' : getSample('2017_DY_NLO', rename='2017_DY_NLO_altTag'),
+  }
+elif era=='2018':
+  samplesDef = {
+      'data'   : getSample(['Run2018A', 'Run2018B', 'Run2018C', 'Run2018D'], rename='2018'),
+      'mcNom'  : getSample('2018_DY_LO'),
+      'mcAlt'  : getSample('2018_DY_pow'),
+      'tagSel' : getSample('2018_DY_LO', rename='2018_DY_LO_altTag'),
+  }
+else:
+  print 'Unknown era, please fix'
+  exit(1)
+
+
+
 
 # Set the tree to use within the samples
 for sample in samplesDef.values():
@@ -40,8 +62,7 @@ for mcSample in ['mcNom', 'mcAlt']:
 
 # Alternative tag selection
 if not samplesDef['tagSel'] is None:
-    samplesDef['tagSel'].rename('2016_DY_NLO_altTag')
-    samplesDef['tagSel'].set_cut('tag_Ele_pt > 37') #canceled non trig MVA cut
+    samplesDef['tagSel'].set_cut('tag_Ele_pt > 37')
 
 # Quickly doing a printout
 for sample in samplesDef.values():

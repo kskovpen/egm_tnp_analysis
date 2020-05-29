@@ -21,27 +21,28 @@ samples = [
 ]
 
 # 2017
-dir2016 = os.path.join(tnpTuplesDirectory, '2017/merged')
+dir2017 = os.path.join(tnpTuplesDirectory, '2017/merged')
 samples += [
-  tnpSample('2017_DY1_LO', os.path.join(dir2017, 'DY1_LO.root'),     isMC = True),
-  tnpSample('2017_DY1_LO', os.path.join(dir2017, 'DY1_LO_ext.root'), isMC = True),
-  tnpSample('2017_DY_NLO', os.path.join(dir2017, 'DY_NLO.root'),     isMC = True),
-  tnpSample('Run2017B',    os.path.join(dir2017, 'Run2017B.root'),   lumi = 4.793 ),
-  tnpSample('Run2017C',    os.path.join(dir2017, 'Run2017C.root'),   lumi = 9.753),
-  tnpSample('Run2017D',    os.path.join(dir2017, 'Run2017D.root'),   lumi = 4.320 ),
-  tnpSample('Run2017E',    os.path.join(dir2017, 'Run2017E.root'),   lumi = 8.802),
-  tnpSample('Run2017F',    os.path.join(dir2017, '2017RunF.root'),   lumi = 13.567),
+  tnpSample('2017_DY1_LO',     os.path.join(dir2017, 'DY1_LO.root'),     isMC = True),
+  tnpSample('2017_DY1_LO',     os.path.join(dir2017, 'DY1_LO_ext.root'), isMC = True),
+  tnpSample('2017_DY_NLO',     os.path.join(dir2017, 'DY_NLO.root'),     isMC = True),
+  tnpSample('2017_DY_NLO_ext', os.path.join(dir2017, 'DY_NLO_ext.root'), isMC = True),
+  tnpSample('Run2017B',        os.path.join(dir2017, 'Run2017B.root'),   lumi = 4.793),
+  tnpSample('Run2017C',        os.path.join(dir2017, 'Run2017C.root'),   lumi = 9.753),
+  tnpSample('Run2017D',        os.path.join(dir2017, 'Run2017D.root'),   lumi = 4.320),
+  tnpSample('Run2017E',        os.path.join(dir2017, 'Run2017E.root'),   lumi = 8.802),
+  tnpSample('Run2017F',        os.path.join(dir2017, 'Run2017F.root'),   lumi = 13.567),
 ]
 
 # 2018
 dir2018 = os.path.join(tnpTuplesDirectory, '2018/merged')
 samples += [
-  tnpSample('2018_DY_LO',  os.path.join(dir2018, 'DY_LO.root',     isMC = True),
-  tnpSample('2018_DY_pow', os.path.join(dir2018, 'DY_pow.root',    isMC = True),
-  tnpSample('Run2018A' ,   os.path.join(dir2018, 'Run2018A.root' , lumi = 10.723),
-  tnpSample('Run2018B' ,   os.path.join(dir2018, 'Run2018B.root' , lumi = 5.964),
-  tnpSample('Run2018C' ,   os.path.join(dir2018, 'Run2018C.root' , lumi = 6.382),
-  tnpSample('Run2018D' ,   os.path.join(dir2018, 'Run2018D.root' , lumi = 29.181),
+  tnpSample('2018_DY_LO',  os.path.join(dir2018, 'DY_LO.root'),    isMC = True),
+  tnpSample('2018_DY_pow', os.path.join(dir2018, 'DY_pow.root'),   isMC = True),
+  tnpSample('Run2018A' ,   os.path.join(dir2018, 'Run2018A.root'), lumi = 10.723),
+  tnpSample('Run2018B' ,   os.path.join(dir2018, 'Run2018B.root'), lumi = 5.964),
+  tnpSample('Run2018C' ,   os.path.join(dir2018, 'Run2018C.root'), lumi = 6.382),
+  tnpSample('Run2018D' ,   os.path.join(dir2018, 'Run2018D.root'), lumi = 29.181),
 ]
 
 # UL2017
