@@ -10,7 +10,8 @@ source etc/scripts/setup.sh
 make
 ```
 
-> The latter two commands do not work on T2\_BE\_IIHE, they seem to be lxplus specific. I am actually not sure if they are really needed, this package seem to work as long as you have some python around.
+> The source etc/scripts/setup.sh does not work on T2\_BE\_IIHE, they seem to be lxplus specific. I am actually not sure if they are really needed, this package seem to work as long as you have a decent version of python around (e.g. a cmsenv within a not too old CMSSW version will be sufficient).
+
 
 ## Quick description
 

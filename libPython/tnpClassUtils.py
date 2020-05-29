@@ -18,6 +18,7 @@ class tnpSample:
         self.isMC    = isMC
         self.weight  = None
         self.tnpTree = None
+        self.tree = None
         self.maxWeight = 999999
 
     def set_weight(self,weight):
@@ -28,6 +29,7 @@ class tnpSample:
     
     def set_tnpTree( self, treename):
         self.tnpTree = treename
+        self.tree    = '%s/fitter_tree' % treename
 
     def set_puTree(self,puTree):
         self.puTree = puTree

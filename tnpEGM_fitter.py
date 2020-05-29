@@ -82,10 +82,8 @@ tnpBins = pickle.load( open( '%s/bining.pkl'%(outputDirectory),'rb') )
 ####################################################################
 ##### Create Histograms
 ####################################################################
-for s in tnpConf.samplesDef.keys():
-    sample =  tnpConf.samplesDef[s]
-    if sample is None: continue
-    setattr( sample, 'tree'     ,'%s/fitter_tree' % tnpConf.tnpTreeDir )
+for sample in tnpConf.samplesDef.values():
+  if sample:
     setattr( sample, 'histFile' , '%s/%s_%s.root' % ( outputDirectory , sample.name, args.flag ) )
 
 
