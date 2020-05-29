@@ -1,104 +1,69 @@
 from libPython.tnpClassUtils import tnpSample
+import os
 
-#github branches
-#LegacyReReco2016: https://github.com/swagata87/egm_tnp_analysis/tree/Legacy2016_94XIDv2 
-#ReReco2017: https://github.com/swagata87/egm_tnp_analysis/tree/tnp_2017datamc_IDV2_10_2_0
-#PromptReco2018: https://github.com/swagata87/egm_tnp_analysis/tree/egm_tnp_Prompt2018_102X_10222018_MC102XECALnoiseFix200kRelVal
-#UL2017: https://github.com/swagata87/egm_tnp_analysis/blob/UL2017Final/etc/inputs/tnpSampleDef.py
+# tnpTuple top directory
+# tnpTuplesDirectory = '~/tagAndProbe/electrons/tuples/'
+tnpTuplesDirectory = '/eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-05-14' # on lxplus
+tnpTuplesDirectory = '/pnfs/iihe/cms/store/user/tomc/tnpTuples/2020-05-14'        # on T2_BE_IIHE
 
+# 2016
+dir2016 = os.path.join(tnpTuplesDirectory, '2016/merged')
+samples = [
+  tnpSample('2016_DY_LO',  os.path.join(dir2016, 'DY_LO.root'),    isMC = True),
+  tnpSample('2016_DY_NLO', os.path.join(dir2016, 'DY_NLO.root'),   isMC = True),
+  tnpSample('Run2016B',    os.path.join(dir2016, 'Run2016B.root'), lumi = 5.785),
+  tnpSample('Run2016C',    os.path.join(dir2016, 'Run2016C.root'), lumi = 2.573),
+  tnpSample('Run2016D',    os.path.join(dir2016, 'Run2016D.root'), lumi = 4.248),
+  tnpSample('Run2016E',    os.path.join(dir2016, 'Run2016E.root'), lumi = 3.947),
+  tnpSample('Run2016F',    os.path.join(dir2016, 'Run2016F.root'), lumi = 3.102),
+  tnpSample('Run2016G',    os.path.join(dir2016, 'Run2016G.root'), lumi = 7.540),
+  tnpSample('Run2016H',    os.path.join(dir2016, 'Run2016H.root'), lumi = 7.813),
+]
 
-### eos repositories
-eosLegacyReReco2016 = '/eos/cms/store/group/phys_egamma/swmukher/egmNtuple_V2ID_2016/'
-eosReReco2017 = '/eos/cms/store/group/phys_egamma/swmukher/ntuple_2017_v2/'
-eosReReco2018 = '/eos/cms/store/group/phys_egamma/swmukher/rereco2018/ECAL_NOISE/'
-#eosUL2017 = '/eos/cms/store/group/phys_egamma/asroy/Tag-and-Probe_Tree/UL2017/'
-eosUL2017 = '/eos/cms/store/group/phys_egamma/asroy/Tag-and-Probe_Tree/UL2017_MINIAOD_Nm1/'
+# 2017
+dir2016 = os.path.join(tnpTuplesDirectory, '2017/merged')
+samples += [
+  tnpSample('2017_DY1_LO', os.path.join(dir2017, 'DY1_LO.root'),     isMC = True),
+  tnpSample('2017_DY1_LO', os.path.join(dir2017, 'DY1_LO_ext.root'), isMC = True),
+  tnpSample('2017_DY_NLO', os.path.join(dir2017, 'DY_NLO.root'),     isMC = True),
+  tnpSample('Run2017B',    os.path.join(dir2017, 'Run2017B.root'),   lumi = 4.793 ),
+  tnpSample('Run2017C',    os.path.join(dir2017, 'Run2017C.root'),   lumi = 9.753),
+  tnpSample('Run2017D',    os.path.join(dir2017, 'Run2017D.root'),   lumi = 4.320 ),
+  tnpSample('Run2017E',    os.path.join(dir2017, 'Run2017E.root'),   lumi = 8.802),
+  tnpSample('Run2017F',    os.path.join(dir2017, '2017RunF.root'),   lumi = 13.567),
+]
 
+# 2018
+dir2018 = os.path.join(tnpTuplesDirectory, '2018/merged')
+samples += [
+  tnpSample('2018_DY_LO',  os.path.join(dir2018, 'DY_LO.root',     isMC = True),
+  tnpSample('2018_DY_pow', os.path.join(dir2018, 'DY_pow.root',    isMC = True),
+  tnpSample('Run2018A' ,   os.path.join(dir2018, 'Run2018A.root' , lumi = 10.723),
+  tnpSample('Run2018B' ,   os.path.join(dir2018, 'Run2018B.root' , lumi = 5.964),
+  tnpSample('Run2018C' ,   os.path.join(dir2018, 'Run2018C.root' , lumi = 6.382),
+  tnpSample('Run2018D' ,   os.path.join(dir2018, 'Run2018D.root' , lumi = 29.181),
+]
 
+# UL2017
+  # TODO
 
-ReReco2017 = {
+# UL2018
+  # TODO
 
-    'DY_madgraph'              : tnpSample('DY_madgraph',
-                                       eosReReco2017 + 'DYJetsToLL.root',
-                                       isMC = True, nEvts =  -1 ),
-    'DY_1j_madgraph'              : tnpSample('DY_1j_madgraph',
-                                       eosReReco2017 + 'DY1JetsToLLM50madgraphMLM.root',
-                                       isMC = True, nEvts =  -1 ),
-#    'DY_amcatnlo'                 : tnpSample('DY_amcatnlo',
-#                                       eosMoriond18 + 'DYJetsToLLM50amcatnloFXFX.root',
-#                                       isMC = True, nEvts =  -1 ),
-    'DY_amcatnloext'                 : tnpSample('DY_amcatnloext',
-                                       eosReReco2017 + 'DYJetsToLLM50amcatnloFXFXext.root',
-                                       isMC = True, nEvts =  -1 ),
-
-
-    'data_Run2017B' : tnpSample('data_Run2017B' , eosReReco2017 + 'RunB.root' , lumi = 4.793 ),
-    'data_Run2017C' : tnpSample('data_Run2017C' , eosReReco2017 + 'RunC.root' , lumi = 9.753),
-    'data_Run2017D' : tnpSample('data_Run2017D' , eosReReco2017 + 'RunD.root' , lumi = 4.320 ),
-    'data_Run2017E' : tnpSample('data_Run2017E' , eosReReco2017 + 'RunE.root' , lumi = 8.802),
-    'data_Run2017F' : tnpSample('data_Run2017F' , eosReReco2017 + 'RunF.root' , lumi = 13.567),
-
-    }
-
-LegacyReReco2016 = {
-
-    'DY_madgraph' : tnpSample('DY_madgraph', 
-                                        eosLegacyReReco2016 + 'TnPTree_DY_M50_madgraphMLM.root',
-                                        isMC = True, nEvts =  -1 ),
-    'DY_amcatnlo' : tnpSample('DY_amcatnlo', 
-                                        eosLegacyReReco2016 + 'TnPTree_DY_M50_amcatnloFXFX.root',
-                                        isMC = True, nEvts =  -1 ),
-
-    'data_Run2016Bv2' : tnpSample('data_Run2017Bv2' , eosLegacyReReco2016 + 'TnPTree_2016B_2.root' , lumi = 5.785 ),
-    'data_Run2016C' : tnpSample('data_Run2017C' , eosLegacyReReco2016 + 'TnPTree_2016C.root' , lumi = 2.573 ),
-    'data_Run2016D' : tnpSample('data_Run2017D' , eosLegacyReReco2016 + 'TnPTree_2016D.root' , lumi = 4.248 ),
-    'data_Run2016E' : tnpSample('data_Run2017E' , eosLegacyReReco2016 + 'TnPTree_2016E.root' , lumi = 3.947 ),
-    'data_Run2016F' : tnpSample('data_Run2017F' , eosLegacyReReco2016 + 'TnPTree_2016F.root' , lumi = 3.102 ),
-    'data_Run2016G' : tnpSample('data_Run2017G' , eosLegacyReReco2016 + 'TnPTree_2016G.root' , lumi = 7.540 ),
-    'data_Run2016H' : tnpSample('data_Run2017H' , eosLegacyReReco2016 + 'TnPTree_2016H.root' , lumi = 7.813 ),
-
-
-
-}
-
-
-ReReco2018 = {
-    ### MiniAOD TnP for IDs scale 
-
-    'DY_madgraph'              : tnpSample('DY_madgraph',
-                                            eosReReco2018 + 'DYJetsToLLmadgraphMLM.root',
-                                            isMC = True, nEvts =  -1 ),
-
-    'DY_powheg'              : tnpSample('DY_powheg',
-                                            eosReReco2018 + 'DYToEEpowheg.root',
-                                            isMC = True, nEvts =  -1 ),
-    
-
-    'data_Run2018A' : tnpSample('data_Run2018A' , eosReReco2018 + 'RunA.root' , lumi = 10.723),  
-    'data_Run2018B' : tnpSample('data_Run2018B' , eosReReco2018 + 'RunB.root' , lumi = 5.964),
-    'data_Run2018C' : tnpSample('data_Run2018C' , eosReReco2018 + 'RunC.root' , lumi = 6.382),
-    'data_Run2018D' : tnpSample('data_Run2018D' , eosReReco2018 + 'RunD.root' , lumi = 29.181), 
-
-    }
-
-
-UL2017 = {
-    ### MiniAOD TnP for IDs scale factors
-    'DY_madgraph'              : tnpSample('DY_madgraph',
-                                       eosUL2017 + 'DYJetsToEE.root ',
-                                       isMC = True, nEvts =  -1 ),
-#    'DY_amcatnlo'                 : tnpSample('DY_amcatnlo',
-#                                       eosUL2017 + 'DYJetsToLLM50amcatnloFXFX.root',
-#                                       isMC = True, nEvts =  -1 ),
-    'DY_amcatnloext'                 : tnpSample('DY_amcatnloext',
-                                       eosUL2017 + 'DYJetsToLL_amcatnloFXFX.root',
-                                       isMC = True, nEvts =  -1 ),
-
-
-    'data_Run2017B' : tnpSample('data_Run2017B' , eosUL2017 + 'SingleEle_RunB.root' , lumi = 4.793961427),
-    'data_Run2017C' : tnpSample('data_Run2017C' , eosUL2017 + 'SingleEle_RunC.root' , lumi = 9.631214821 ),
-    'data_Run2017D' : tnpSample('data_Run2017D' , eosUL2017 + 'SingleEle_RunD.root' , lumi = 4.247682053 ),
-    'data_Run2017E' : tnpSample('data_Run2017E' , eosUL2017 + 'SingleEle_RunE.root' , lumi = 9.313642402 ),
-    'data_Run2017F' : tnpSample('data_Run2017F' , eosUL2017 + 'SingleEle_RunF.root' , lumi = 13.510934811),
-
-    }
+#
+# This function returns one of the above tnpSample based on the name (first argument in each tnpSample)
+# If you give it a list, it adds them up (useful for adding multiple data runs)
+#
+def getSample(name, rename=None):
+  if isinstance(name, list):
+    summedSample = getSample(name[0]).clone()
+    for i in name[1:]:
+      summedSample.add_sample(getSample(i))
+    toReturn = summedSample
+  else:
+    for i in samples:
+      if i.name==name:
+        toReturn = i.clone()
+        break
+  if rename: toReturn.rename(rename)
+  return toReturn
