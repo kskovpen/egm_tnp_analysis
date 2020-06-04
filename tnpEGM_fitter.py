@@ -91,15 +91,10 @@ if args.createHists:
 
     import libPython.histUtils as tnpHist
 
-    for sampleType in tnpConf.samplesDef.keys():
-        sample =  tnpConf.samplesDef[sampleType]
-        if sample is None : continue
-        if sampleType == args.sample or args.sample == 'all' :
-            print 'creating histogram for sample '
-            sample.dump()
+    for sampleKey, sample in tnpConf.samplesDef.iteritems():
+        if sample and (args.sample=='all' or sampleKey==args.sample):
+            print 'creating histograms for sample %s' % sampleKey
             var = { 'name' : 'pair_mass', 'nbins' : 80, 'min' : 50, 'max': 130 }
-            if sample.mcTruth:
-                var = { 'name' : 'pair_mass', 'nbins' : 80, 'min' : 50, 'max': 130 }
             tnpHist.makePassFailHistograms( sample, tnpConf.flags[args.flag], tnpBins, var )
 
     sys.exit(0)
@@ -164,17 +159,18 @@ if  args.doPlot:
     if not os.path.exists( plottingDir ):
         os.makedirs( plottingDir )
 
-    # copy index.php to all subdirectories
+    # copy index.php to all subdirectories (starting from outputDirectory)
     for i in range(1, len(plottingDir.split('/'))):
+      print subdir
       subdir = os.path.join(plottingDir.split('/')[:i])
-      shutil.copy('etc/inputs/index.php','%s/index.php' % subdir)
+      if outputDirectory in subdir:
+        shutil.copy('etc/inputs/index.php','%s/index.php' % subdir)
 
     for ib in range(len(tnpBins['bins'])):
         if (args.binNumber >= 0 and ib == args.binNumber) or args.binNumber < 0:
             tnpRoot.histPlotter( fileName, tnpBins['bins'][ib], plottingDir )
 
-    print ' ===> Plots saved in <======='
-#    print 'localhost/%s/' % plottingDir
+    print ' ===> Plots saved in %s <=======' % plottingDir
 
 
 ####################################################################
