@@ -1,6 +1,9 @@
 import copy
 import os
 
+from libPython.logger import getLogger
+log = getLogger()
+
 def mkdir(directory):
     if not os.path.isdir(directory):
         os.makedirs(directory) 
@@ -41,18 +44,18 @@ class tnpSample:
         self.mcTruth = truth
 
     def dump(self):
-        print '**** name: %-*s ' % (100, self.name)
-        print '  path    : ', self.path
-        print '  tnpTree : ', self.tnpTree
+        log.info('**** name: %-*s ' % (100, self.name))
+        log.info('  path    : %s' % self.path)
+        log.info('  tnpTree : %s' % self.tnpTree)
         if self.isMC:
-            print '   --- MC sample --- '
-            print '  nEvts    : ', self.nEvts
-            print '  mcTruth  : ', self.mcTruth
-            print '  puTree   : ', self.puTree
-            print '  weight   : ', self.weight
-        else  :
-            print '   --- Data sample --- '
-            print '  lumi     : ', self.lumi
+            log.info('   --- MC sample --- ')
+            log.info('  nEvts    : %s' % self.nEvts)
+            log.info('  mcTruth  : %s' % self.mcTruth)
+            log.info('  puTree   : %s' % self.puTree)
+            log.info('  weight   : %s' % self.weight)
+        else:
+            log.info('   --- Data sample --- ')
+            log.info('  lumi     : %s' % self.lumi)
 
     def rename(self, newname):
         self.name = newname

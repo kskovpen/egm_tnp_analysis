@@ -1,5 +1,8 @@
 import math
 
+from libPython.logger import getLogger
+log = getLogger()
+
 class efficiency:
     #    altEff = [-1]*7
     iAltBkgModel = 0
@@ -118,9 +121,6 @@ def makeTGraphFromList( listOfEfficiencies , keyMin, keyMax ):
         grOut.SetPointError(ip, (point[keyMax]-point[keyMin])/2. , point['err'] )
         ip = ip + 1
 
-    #    print "###########################"
-    #    print listOfEff
-    #    grOut.Print()
     return grOut
 
 
@@ -159,7 +159,7 @@ class efficiencyList:
                         effMinus =  self.effList[ptBin][etaBinMinus] 
 
                     if effMinus is None:
-                        print " ---- efficiencyList: I did not find -eta bin!!!"
+                        log.warning("I did not find -eta bin!!!")
                         
                     else:                        
                         averageData = (effPlus.effData + effMinus.effData)/2.
@@ -168,8 +168,8 @@ class efficiencyList:
                         self.effList[ptBin][etaBinPlus ].combineSyst(averageData,averageMC)
 #                        self.effList[ptBin][etaBinMinus].combineSyst(effMinus.effData,effMinus.effMC)
 #                        self.effList[ptBin][etaBinPlus ].combineSyst(effPlus.effData,effPlus.effMC)
-                        #print 'syst 1 [-] (etaBin: %1.3f,%1.3f) ; (ptBin: %3.0f,%3.0f): %f '% (etaBin[0],etaBin[1],ptBin[0],ptBin[1],self.effList[ptBin][etaBinMinus].syst[1])
-                        #print 'syst 1 [+] (etaBin: %1.3f,%1.3f) ; (ptBin: %3.0f,%3.0f): %f '% (etaBin[0],etaBin[1],ptBin[0],ptBin[1],self.effList[ptBin][etaBinPlus] .syst[1])
+                        log.debug('syst 1 [-] (etaBin: %1.3f,%1.3f) ; (ptBin: %3.0f,%3.0f): %f '% (etaBin[0],etaBin[1],ptBin[0],ptBin[1],self.effList[ptBin][etaBinMinus].syst[1]))
+                        log.debug('syst 1 [+] (etaBin: %1.3f,%1.3f) ; (ptBin: %3.0f,%3.0f): %f '% (etaBin[0],etaBin[1],ptBin[0],ptBin[1],self.effList[ptBin][etaBinPlus] .syst[1]))
                         
 
                         
@@ -187,7 +187,7 @@ class efficiencyList:
 
                     if effMinus is None:
                         self.effList[ptBin][etaBinMinus] = effPlus
-                        print " ---- efficiencyList: I did not find -eta bin!!!"
+                        log.warning("I did not find -eta bin!!!")
                     else:
                         #### fix statistical errors if needed
                         if    effPlus.errEffData <= 0.00001 and effMinus.errEffData > 0.00001: 
@@ -214,12 +214,12 @@ class efficiencyList:
                                 self.effList[ptBin][etaBinMinus].altEff[isyst] = averageSyst
                             else:
                                 averageSyst = (effPlus.altEff[isyst] +  effMinus.altEff[isyst]) / 2
-                                print "issue, I am averaging but the efficiencies are quite different in 2 etaBins"
-                                print " --- syst: ", isyst
-                                print str(self.effList[ptBin][etaBinPlus ])
-                                print str(self.effList[ptBin][etaBinMinus])
-                                print "   eff[+] = ",  self.effList[ptBin][etaBinPlus ].altEff[isyst]
-                                print "   eff[-] = ",  self.effList[ptBin][etaBinMinus].altEff[isyst]                                
+                                log.warning("issue, I am averaging but the efficiencies are quite different in 2 etaBins")
+                                log.info(" --- syst: ", isyst)
+                                log.info(str(self.effList[ptBin][etaBinPlus ]))
+                                log.info(str(self.effList[ptBin][etaBinMinus]))
+                                log.info("   eff[+] = ",  self.effList[ptBin][etaBinPlus ].altEff[isyst])
+                                log.info("   eff[-] = ",  self.effList[ptBin][etaBinMinus].altEff[isyst]) 
                                 self.effList[ptBin][etaBinPlus ].altEff[isyst] = averageSyst
                                 self.effList[ptBin][etaBinMinus].altEff[isyst] = averageSyst
 
@@ -284,7 +284,7 @@ class efficiencyList:
                         averageMC = None
                         if effMinus is None:
                             averageMC = effPlus.effMC
-                            print " ---- efficiencyList: I did not find -eta bin!!!"
+                            log.warning(" ---- efficiencyList: I did not find -eta bin!!!")
                         else:                        
                             averageMC   = (effPlus.effMC   + effMinus.effMC  )/2.
                         ### so this is h2D bin is inside the bining used by e/gamma POG

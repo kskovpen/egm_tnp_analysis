@@ -9,6 +9,9 @@ from efficiencyUtils import efficiency
 from efficiencyUtils import efficiencyList
 import efficiencyUtils as effUtil
 
+from libPython.logger import getLogger
+log = getLogger()
+
 tdrstyle.setTDRStyle()
 
 
@@ -286,12 +289,12 @@ def diagnosticErrorPlot( effgr, ierror, nameout ):
     return h2_sfErrorAbs
 
 def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
-    print " Opening file: %s (plot lumi: %3.1f)" % ( filein, lumi )
+    log.info(" Opening file: %s (plot lumi: %3.1f)" % ( filein, lumi ))
     CMS_lumi.lumi_13TeV = "%+3.1f fb^{-1}" % lumi 
 
     nameOutBase = filein 
     if not os.path.exists( filein ) :
-        print 'file %s does not exist' % filein
+        log.error('file %s does not exist' % filein)
         sys.exit(1)
 
 
@@ -318,8 +321,6 @@ def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
 ### massage the numbers a bit
     effGraph.symmetrizeSystVsEta()
     effGraph.combineSyst()
-
-    print " ------------------------------- "
 
     customEtaBining = []
     customEtaBining.append( (0.000,0.800))
@@ -414,7 +415,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.txtFile is None:
-        print ' - Needs EGM txt file as input'
+        log.error('Needs EGM txt file as input (Args.txtFile is None)')
         sys.exit(1)
     
 

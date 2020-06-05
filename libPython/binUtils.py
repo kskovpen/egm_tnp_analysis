@@ -1,5 +1,7 @@
 import copy
 
+from libPython.logger import getLogger
+log = getLogger()
 
 def createBins( bining, cut ):
     binCut = None
@@ -16,7 +18,7 @@ def createBins( bining, cut ):
     for iv in range(len(bining)):
         var = bining[iv]['var']
         if not bining[iv].has_key('type') or not bining[iv].has_key('bins'):
-            print 'bining is not complete for var %s' % var
+            log.warning('bining is not complete for var %s' % var)
             return listOfIndex
         nb1D = 1
         if   bining[iv]['type'] == 'float' :
