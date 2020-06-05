@@ -2,7 +2,6 @@ from libPython.tnpClassUtils import tnpSample
 import os
 
 # tnpTuple top directory
-# tnpTuplesDirectory = '~/tagAndProbe/electrons/tuples/'
 tnpTuplesDirectory = '/eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-05-14' # on lxplus
 tnpTuplesDirectory = '/pnfs/iihe/cms/store/user/tomc/tnpTuples/2020-05-14'        # on T2_BE_IIHE
 
@@ -46,10 +45,10 @@ samples += [
 ]
 
 # UL2017
-  # TODO
+  # to add (they are already available at /eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-05-20)
 
 # UL2018
-  # TODO
+  # to add (they are already available at /eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-05-20)
 
 #
 # This function returns one of the above tnpSample based on the name (first argument in each tnpSample)
