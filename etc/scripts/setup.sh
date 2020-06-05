@@ -8,9 +8,10 @@ if [[ $(hostname -s) = lxp* ]]; then
 
 # Setup for somewhere else (just get some CMSSW release which works, slow but it gets the job done)
 else
+  returnPath=$(pwd)
+  cd /tmp
   scram p CMSSW CMSSW_10_2_22
   cd CMSSW_10_2_22/src
   eval `scram runtime -sh`
-  cd ../../
-  rm -rf CMSSW_10_2_22
+  cd $returnPath
 fi
