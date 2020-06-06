@@ -158,8 +158,8 @@ if args.doPlot:
         os.makedirs( plottingDir )
 
     # copy index.php to all subdirectories (starting from outputDirectory)
-    for i in range(1, len(plottingDir.split('/'))):
-      subdir = os.path.join(plottingDir.split('/')[:i])
+    for i in range(1, len(plottingDir.split('/'))+1):
+      subdir = '/'.join(plottingDir.split('/')[:i])
       if outputDirectory in subdir:
         shutil.copy('etc/inputs/index.php','%s/index.php' % subdir)
 
