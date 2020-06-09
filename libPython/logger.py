@@ -1,7 +1,8 @@
 #
 # Logger module
 #
-import logging, sys
+import logging, sys, ROOT
+ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
 def getLogger(level='INFO', logFile=None):
   # If it already exist, return it

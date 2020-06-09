@@ -1,6 +1,7 @@
 import math
 
 from libPython.logger import getLogger
+import copy
 log = getLogger()
 
 class efficiency:
@@ -81,9 +82,9 @@ class efficiency:
 
     def __add__(self,eff):
         if self.effData < 0 :
-            return eff.deepcopy()
+            return copy.deepcopy(eff)
         if eff.effData < 0 :
-            return self.deepcopy()
+            return copy.deepcopy(self)
         
         ptbin  = self.ptBin
         etabin = self.etaBin
@@ -215,11 +216,11 @@ class efficiencyList:
                             else:
                                 averageSyst = (effPlus.altEff[isyst] +  effMinus.altEff[isyst]) / 2
                                 log.warning("issue, I am averaging but the efficiencies are quite different in 2 etaBins")
-                                log.info(" --- syst: ", isyst)
+                                log.info(" --- syst: %s" % isyst)
                                 log.info(str(self.effList[ptBin][etaBinPlus ]))
                                 log.info(str(self.effList[ptBin][etaBinMinus]))
-                                log.info("   eff[+] = ",  self.effList[ptBin][etaBinPlus ].altEff[isyst])
-                                log.info("   eff[-] = ",  self.effList[ptBin][etaBinMinus].altEff[isyst]) 
+                                log.info("   eff[+] = %s" % self.effList[ptBin][etaBinPlus ].altEff[isyst])
+                                log.info("   eff[-] = %s" % self.effList[ptBin][etaBinMinus].altEff[isyst])
                                 self.effList[ptBin][etaBinPlus ].altEff[isyst] = averageSyst
                                 self.effList[ptBin][etaBinMinus].altEff[isyst] = averageSyst
 
@@ -288,6 +289,9 @@ class efficiencyList:
                         else:                        
                             averageMC   = (effPlus.effMC   + effMinus.effMC  )/2.
                         ### so this is h2D bin is inside the bining used by e/gamma POG
+                        if not self.effList[ptBin][etaBin].effMC:
+                            log.error('MC efficiency is 0 in ptBin %s and etaBin %s' % (ptBin, etaBin))
+                            continue
                         h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].effData      / self.effList[ptBin][etaBin].effMC)
                         h2.SetBinError  (ix,iy, self.effList[ptBin][etaBin].systCombined / averageMC )
                         if onlyError   == 0 :
@@ -403,11 +407,16 @@ class efficiencyList:
                     listOfGraphs[ptBin] = []
                 effAverage = self.effList[ptBin][etaBin]
                 aValue  = effAverage.effData
-                anError = effAverage.systCombined 
-                if typeGR == 1:
+                anError = effAverage.systCombined
+                if not effAverage.effMC:
+                    log.error('MC efficiency is 0!')
+                    aValue  = 0
+                    anError = 1
+                    continue
+                elif typeGR == 1:
                     aValue  = effAverage.effData      / effAverage.effMC
                     anError = effAverage.systCombined / effAverage.effMC  
-                if typeGR == -1:
+                elif typeGR == -1:
                     aValue  = effAverage.effMC
                     anError = 0#effAverage.errEffMC
                     

@@ -16,6 +16,9 @@ def histPlotter( filename, tnpBin, plotDir ):
 
 
 def computeEffi( n1,n2,e1,e2):
+    if not (n1+n2):
+      log.warning('Bin found with no events')
+      return [0., 1.]
     effout = []
     eff   = n1/(n1+n2)
     e_eff = 1/(n1+n2)*math.sqrt(e1*e1*n2*n2+e2*e2*n1*n1)/(n1+n2)

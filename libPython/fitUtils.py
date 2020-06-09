@@ -33,7 +33,7 @@ def createWorkspaceForAltSig( sample, tnpBin, tnpWorkspaceParam ):
                 x=re.compile('%s.*?' % par)
                 listToRM = filter(x.match, tnpWorkspaceParam)
                 for ir in listToRM :
-                    log.info('**** remove', ir)
+                    log.info('**** remove %s' % ir)
                     tnpWorkspaceParam.remove(ir)                    
             tnpWorkspaceParam.append( 'tailLeft[-1]' )
 
