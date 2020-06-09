@@ -23,7 +23,7 @@ samples = [
 dir2017 = os.path.join(tnpTuplesDirectory, '2017/merged')
 samples += [
   tnpSample('2017_DY1_LO',     os.path.join(dir2017, 'DY1_LO.root'),     isMC = True),
-  tnpSample('2017_DY1_LO',     os.path.join(dir2017, 'DY1_LO_ext.root'), isMC = True),
+  tnpSample('2017_DY1_LO_ext', os.path.join(dir2017, 'DY1_LO_ext.root'), isMC = True),
   tnpSample('2017_DY_NLO',     os.path.join(dir2017, 'DY_NLO.root'),     isMC = True),
   tnpSample('2017_DY_NLO_ext', os.path.join(dir2017, 'DY_NLO_ext.root'), isMC = True),
   tnpSample('Run2017B',        os.path.join(dir2017, 'Run2017B.root'),   lumi = 4.793),
@@ -36,7 +36,7 @@ samples += [
 # 2018
 dir2018 = os.path.join(tnpTuplesDirectory, '2018/merged')
 samples += [
-  tnpSample('2018_DY_LO',  os.path.join(dir2018, 'DY_LO.root'),    isMC = True),
+  tnpSample('2018_DY_NLO', os.path.join(dir2018, 'DY_NLO.root'),   isMC = True),
   tnpSample('2018_DY_pow', os.path.join(dir2018, 'DY_pow.root'),   isMC = True),
   tnpSample('Run2018A' ,   os.path.join(dir2018, 'Run2018A.root'), lumi = 10.723),
   tnpSample('Run2018B' ,   os.path.join(dir2018, 'Run2018B.root'), lumi = 5.964),

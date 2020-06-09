@@ -22,6 +22,7 @@ parser.add_argument('--doPlot'     , action='store_true'  , help = 'plotting')
 parser.add_argument('--sumUp'      , action='store_true'  , help = 'sum up efficiencies')
 parser.add_argument('--iBin'       , dest = 'binNumber'   , type = int,  default=-1, help='bin number (to refit individual bin)')
 parser.add_argument('--flag'       , default = None       , help ='WP to test')
+parser.add_argument('--configOpts' , default = None       , help ='Additional parameter to use in settings config')
 parser.add_argument('settings'     , default = None       , help = 'setting file [mandatory]')
 
 
@@ -64,7 +65,7 @@ if args.checkBins:
     tnpBiner.tuneCuts( tnpBins, tnpConf.additionalCuts )
     for ib in range(len(tnpBins['bins'])):
         log.info(tnpBins['bins'][ib]['name'])
-        log.info('  - cut: ',tnpBins['bins'][ib]['cut'])
+        log.info('  - cut: %s' % tnpBins['bins'][ib]['cut'])
     sys.exit(0)
     
 if args.createBins:
@@ -222,6 +223,6 @@ if args.sumUp:
         fOut.write( astr + '\n' )
     fOut.close()
 
-    log.info('Effis saved in file : ',  effFileName)
+    log.info('Effis saved in file : %s' %  effFileName)
     import libPython.EGammaID_scaleFactors as egm_sf
     egm_sf.doEGM_SFs(effFileName,sampleToFit.lumi)

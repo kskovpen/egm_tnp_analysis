@@ -1,13 +1,33 @@
 #############################################################
 ########## General settings
 #############################################################
+
+
+# Hacky way to allow specifying the era as --configOpts="era=2016" in the tnpEGM_fitter.py
+import __main__ as main
+for option in main.args.configOpts.split(';'):
+  if 'era' in option: era = option.split('=')[-1]
+
+
+
+# Baseline selection as defined in https://indico.cern.ch/event/923174/contributions/3889049/attachments/2050271/3436370/kskovpenLeptonMVA20200603.pdf (slide 5)
+baseline = 'el_miniIsoAll_fall17 < 0.4 && el_mHits < 2 && abs(el_sip) < 8 && abs(el_dxy) < 0.05 && abs(el_dz) < 0.1'
+
+# Baseline selection tZq (need new TnPTree's and especially someone needs to come up with an explanation why you need such a complicated baseline when you apply an mva)
+# Bullshit alert
+baselineTZQ  = 'el_mHits==0 && abs(el_sip) < 8 && abs(el_dxy) < 0.05 && abs(el_dz) < 0.1'
+baselineTZQ += 'CONEPT > 10 && CONVERSIONREJECTION && passingMVA94Xwp80noisoV2 && DEEPCSV < ??'
+baselineTZQ += 'RELISO < 0.4'
+baselineTZQ += '&& ((abs(el_eta) < 1.4442 && el_sieie < 0.011) || (abs(el_eta) > 1.4442 && el_sieie < 0.030))'
+baselineTZQ += '&& el_hoe < 0.10 && el_1overEminus1overP > -0.04'
+# End bullshit alert
+
 # flag to be Tested
 flags = {
-    'passingLeptonMvaTight'  : '(el_leptonMva_TOP > 0.95)',
-    'passingLeptonMvaMedium' : '(el_leptonMva_TOP > 0.4)',
+    'passingLeptonMvaTight'  : '(%s && el_leptonMva_TOP > 0.95)' % baseline,
+    'passingLeptonMvaMedium' : '(%s && el_leptonMva_TOP > 0.4)' % baseline,
     }
 
-era = '2016'
 
 baseOutDir = '/user/tomc/public_html/leptonSF/electrons/%s' % era
 
@@ -37,9 +57,9 @@ elif era=='2017':
 elif era=='2018':
   samplesDef = {
       'data'   : getSample(['Run2018A', 'Run2018B', 'Run2018C', 'Run2018D'], rename='2018'),
-      'mcNom'  : getSample('2018_DY_LO'),
+      'mcNom'  : getSample('2018_DY_NLO'),
       'mcAlt'  : getSample('2018_DY_pow'),
-      'tagSel' : getSample('2018_DY_LO', rename='2018_DY_LO_altTag'),
+      'tagSel' : getSample('2018_DY_NLO', rename='2018_DY_NLO_altTag'),
   }
 else:
   print 'Unknown era, please fix'
