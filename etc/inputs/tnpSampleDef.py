@@ -2,8 +2,8 @@ from libPython.tnpClassUtils import tnpSample
 import os
 
 # tnpTuple top directory
-tnpTuplesDirectory = '/eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-05-14' # on lxplus
-tnpTuplesDirectory = '/pnfs/iihe/cms/store/user/tomc/tnpTuples/2020-05-14'        # on T2_BE_IIHE
+tnpTuplesDirectory = '/eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-06-09' # on lxplus
+tnpTuplesDirectory = '/pnfs/iihe/cms/store/user/tomc/tnpTuples/2020-06-09'        # on T2_BE_IIHE
 
 # 2016
 dir2016 = os.path.join(tnpTuplesDirectory, '2016/merged')
@@ -22,8 +22,8 @@ samples = [
 # 2017
 dir2017 = os.path.join(tnpTuplesDirectory, '2017/merged')
 samples += [
-  tnpSample('2017_DY1_LO',     os.path.join(dir2017, 'DY1_LO.root'),     isMC = True),
-  tnpSample('2017_DY1_LO_ext', os.path.join(dir2017, 'DY1_LO_ext.root'), isMC = True),
+  tnpSample('2017_DY_LO',      os.path.join(dir2017, 'DY_LO.root'),     isMC = True),
+  tnpSample('2017_DY_LO_ext',  os.path.join(dir2017, 'DY_LO_ext.root'), isMC = True),
   tnpSample('2017_DY_NLO',     os.path.join(dir2017, 'DY_NLO.root'),     isMC = True),
   tnpSample('2017_DY_NLO_ext', os.path.join(dir2017, 'DY_NLO_ext.root'), isMC = True),
   tnpSample('Run2017B',        os.path.join(dir2017, 'Run2017B.root'),   lumi = 4.793),

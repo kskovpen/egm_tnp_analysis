@@ -24,8 +24,10 @@ baselineTZQ += '&& el_hoe < 0.10 && el_1overEminus1overP > -0.04'
 
 # flag to be Tested
 flags = {
-    'passingLeptonMvaTight'  : '(%s && el_leptonMva_TOP > 0.95)' % baseline,
+    'passingLeptonMvaTight'  : '(%s && el_leptonMva_TOP > 0.9)' % baseline,
     'passingLeptonMvaMedium' : '(%s && el_leptonMva_TOP > 0.4)' % baseline,
+    'passingLeptonMvaLoose'  : '(%s && el_leptonMva_TOP > 0.0)' % baseline,
+    'passingLeptonMvaVLoose' : '(%s && el_leptonMva_TOP > -.55)' % baseline,
     }
 
 
@@ -51,7 +53,7 @@ elif era=='2017':
   samplesDef = {
       'data'   : getSample(['Run2017B', 'Run2017C', 'Run2017D', 'Run2017E', 'Run2017F'], rename='2017'),
       'mcNom'  : getSample(['2017_DY_NLO', '2017_DY_NLO_ext']),
-      'mcAlt'  : getSample(['2017_DY1_LO', '2017_DY1_LO_ext']),
+      'mcAlt'  : getSample(['2017_DY_LO', '2017_DY_LO_ext']),
       'tagSel' : getSample('2017_DY_NLO', rename='2017_DY_NLO_altTag'),
   }
 elif era=='2018':
