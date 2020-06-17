@@ -10,7 +10,10 @@ if [[ $(hostname -s) = lxp* ]]; then
 else
   returnPath=$(pwd)
   cd /tmp
-  scram p CMSSW CMSSW_10_2_22
+  if [ ! -d "CMSSW_10_2_22/src" ]; then
+    rm -rf CMSSW_10_2_22 # sometimes these tmp directories contain CMSSW releases without the src directory
+    scram p CMSSW CMSSW_10_2_22
+  fi
   cd CMSSW_10_2_22/src
   eval `scram runtime -sh`
   cd $returnPath
