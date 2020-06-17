@@ -12,7 +12,7 @@ for option in main.args.configOpts.split(';'):
 # flag to be Tested
 if   era=='2016': flags = {'passEle27' : 'passHltEle27WPTightGsf'}
 elif era=='2017': flags = {'passEle32' : 'passHltEle32DoubleEGWPTightGsf && passEGL1SingleEGOr'}
-else era=='2018': flags = {'passEle32' : 'passHltEle32WPTightGsf'}
+elif era=='2018': flags = {'passEle32' : 'passHltEle32WPTightGsf'}
 
 baseOutDir = '/user/tomc/public_html/leptonSF/trigger_HNL/%s' % era
 
@@ -37,7 +37,7 @@ elif era=='2017':
       'data'   : getSample(['Run2017B', 'Run2017C', 'Run2017D', 'Run2017E', 'Run2017F'], rename='2017'),
       'mcNom'  : getSample(['2017_DY_NLO', '2017_DY_NLO_ext']),
       'mcAlt'  : getSample(['2017_DY_LO', '2017_DY_LO_ext']),
-      'tagSel' : getSample('2017_DY_NLO', rename='2017_DY_NLO_altTag'),
+      'tagSel' : getSample(['2017_DY_NLO', '2017_DY_NLO_ext'], rename='2017_DY_NLO_altTag'),
   }
 elif era=='2018':
   samplesDef = {
@@ -67,7 +67,7 @@ for mcSample in ['mcNom', 'mcAlt']:
 
 # Alternative tag selection
 if not samplesDef['tagSel'] is None:
-    samplesDef['tagSel'].set_cut('tag_Ele_pt > 40')
+  samplesDef['tagSel'].set_cut('tag_Ele_pt > %s' % ('35' if era=='2016' else '37'))
 
 # Quickly doing a printout
 for sample in samplesDef.values():
@@ -78,15 +78,15 @@ for sample in samplesDef.values():
 #############################################################
 biningDef = [
    { 'var' : 'el_sc_eta' , 'type': 'float', 'bins': [-2.5,-2.0,-1.566,-1.4442, -0.8, 0.0, 0.8, 1.4442, 1.566, 2.0, 2.5] },
-   { 'var' : 'el_pt' , 'type': 'float', 'bins': [25,30,35,50,70,100,200,500]}, # in HNL analysis we use from 30 (2016) and 35 (2017-2018), just prepending some bins here to see possible trends
+   { 'var' : 'el_pt' , 'type': 'float', 'bins': [25,30,35,40,50,70,100,200,500]}, # in HNL analysis we use from 30 (2016) and 35 (2017-2018), just prepending some bins here to see possible trends
 ]
 
 #############################################################
 ########## Cuts definition for all samples
 #############################################################
 ### cut
-cutBase  = 'tag_Ele_pt > %s && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0' % ('27' if era=='2016' else '35') # tag
-cutBase += 'fabs(el_dxy) < 0.05) && fabs(el_dz) < 0.1 && el_relIso_fall17 < 0.1 && passingMVA94Xwp90noisoV2' # Id of the single prompt electron we trigger on, see table 11 in AN-18-014
+cutBase  = 'tag_Ele_pt > %s && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0' % ('30' if era=='2016' else '35') # tag
+cutBase += '&& abs(el_dxy) < 0.05 && abs(el_dz) < 0.1 && el_relIso_fall17 < 0.1 && passingMVA94Xwp90noisoV2' # Id of the single prompt electron we trigger on, see table 11 in AN-18-014
 
 additionalCuts = {}
 
@@ -96,8 +96,8 @@ additionalCuts = {}
 tnpParNomFit = [
     "meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
     "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
-    "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
-    "acmsF[60.,50.,80.]","betaF[0.05,0.01,0.08]","gammaF[0.1, -2, 2]","peakF[90.0]",
+    "acmsP[60.,50.,150.]","betaP[0.05,0.01,0.5]","gammaP[0.1, -2, 2]","peakP[90.0]",
+    "acmsF[60.,50.,150.]","betaF[0.05,0.01,0.5]","gammaF[0.1, -2, 2]","peakF[90.0]",
     ]
 
 tnpParAltSigFit = [
