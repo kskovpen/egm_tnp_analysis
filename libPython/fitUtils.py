@@ -92,6 +92,16 @@ def histFitterNominal( sample, tnpBin, tnpWorkspaceParam ):
         "RooCMSShape::bkgFail(x, acmsF, betaF, gammaF, peakF)",
         ]
 
+    # Allow to give some dictionary {'default': tnpWorkspaceParam, 'bin00' : tnpWorkspaceParam} instead of tnpWorkspaceParam
+    if type(tnpWorkspaceParam) is dict:
+      for key in tnpWorkspaceParam.keys():
+        if key in tnpBin['name']:
+          tnpWorkspaceParam = tnpWorkspaceParam[key]
+          break
+      else:
+        tnpWorkspaceParam = tnpWorkspaceParam['default']
+
+
     tnpWorkspace = []
     tnpWorkspace.extend(tnpWorkspaceParam)
     tnpWorkspace.extend(tnpWorkspaceFunc)
