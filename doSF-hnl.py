@@ -44,15 +44,13 @@ def cream02(command, logFile):
 #
 # Settings
 #
-settings      = 'settings_leptonMva.py'
-workingpoints = ['passingLeptonMvaTight', 'passingLeptonMvaMedium', 'passingLeptonMvaLoose', 'passingLeptonMvaVLoose', 'passingLeptonMvaTightAnd3Charge', 'passingLeptonMvaMediumAnd3Charge']
-eras          = ['2016', '2017', '2018']
+settings      = 'settings_triggerHNL.py'
+workingpoints = {'2016': 'passEle27', '2017': 'passEle32', '2018': 'passEle32'}
 
 #
 # Workflow
 #
-for era in eras:
-  for workingpoint in workingpoints:
+for era, workingpoint in workingpoints.items():
     baseCommand = 'python tnpEGM_fitter.py etc/config/%s --flag=%s --configOpts="era=%s"' % (settings, workingpoint, era)
 
     if args.createHists:
@@ -65,7 +63,7 @@ for era in eras:
     if args.firstRound:
       logFile = 'log/fits-nominal/%s-%s' % (workingpoint, era)
       cream02('%s --doFit' % (baseCommand), logFile)
-      logFile = 'log/fits-altSig/%s-%s' % (workingpoint, era)
+      logFile = 'log/fits-altSig-mc/%s-%s' % (workingpoint, era)
       cream02('%s --doFit --mcSig --altSig;%s --doFit --altSig' % (baseCommand, baseCommand), logFile)
       logFile = 'log/fits-altBkg/%s-%s' % (workingpoint, era)
       cream02('%s --doFit --altBkg' % (baseCommand), logFile)
