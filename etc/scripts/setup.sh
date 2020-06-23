@@ -9,11 +9,9 @@ if [[ $(hostname -s) = lxp* ]]; then
 # Setup for somewhere else (just get some CMSSW release which works, slow but it gets the job done)
 else
   returnPath=$(pwd)
-  cd /tmp
-  if [ ! -d "CMSSW_10_2_22/src" ]; then
-    rm -rf CMSSW_10_2_22 # sometimes these tmp directories contain CMSSW releases without the src directory
-    scram p CMSSW CMSSW_10_2_22
-  fi
+  tempDir=$(mktemp -d /tmp/XXXXXXXXX)
+  cd $tempDir
+  scram p CMSSW CMSSW_10_2_22
   cd CMSSW_10_2_22/src
   eval `scram runtime -sh`
   cd $returnPath
