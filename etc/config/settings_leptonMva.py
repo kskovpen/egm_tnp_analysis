@@ -62,8 +62,8 @@ elif era=='2017':
 elif era=='2018':
   samplesDef = {
       'data'   : getSample(['Run2018A', 'Run2018B', 'Run2018C', 'Run2018D'], rename='2018'),
-      'mcNom'  : getSample('2018_DY_NLO'),
-      'mcAlt'  : getSample('2018_DY_pow'),
+      'mcNom'  : getSample(['2018_DY_NLO', '2018_DY_NLO_ext']),
+      'mcAlt'  : getSample('2018_DY_LO'),
       'tagSel' : getSample('2018_DY_NLO', rename='2018_DY_NLO_altTag'),
   }
 else:
@@ -87,7 +87,7 @@ for mcSample in ['mcNom', 'mcAlt']:
 
 # Alternative tag selection
 if not samplesDef['tagSel'] is None:
-    samplesDef['tagSel'].set_cut('tag_Ele_pt > 37')
+    samplesDef['tagSel'].set_cut('tag_Ele_pt > %s' % ('35' if era=='2016' else '37'))
 
 # Quickly doing a printout
 for sample in samplesDef.values():
@@ -107,7 +107,7 @@ biningDef = [
 ########## Cuts definition for all samples
 #############################################################
 ### cut
-cutBase   = 'tag_Ele_pt > 35 && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0'
+cutBase   = 'tag_Ele_pt > %s && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0' % ('30' if era=='2016' else '35')
 
 # can add addtionnal cuts for some bins (first check bin number using tnpEGM --checkBins)
 additionalCuts = { 
@@ -118,12 +118,53 @@ additionalCuts = {
 #############################################################
 ########## fitting params to tune fit by hand if necessary
 #############################################################
-tnpParNomFit = [
-    "meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
-    "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
-    "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
-    "acmsF[60.,50.,80.]","betaF[0.05,0.01,0.08]","gammaF[0.1, -2, 2]","peakF[90.0]",
-    ]
+#
+# Nominal fits
+#
+tnpParNomFit = {'default':  ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                             "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
+                             "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                             "acmsF[60.,50.,80.]","betaF[0.05,0.01,0.08]","gammaF[0.1, -2, 2]","peakF[90.0]"]
+               }
+
+
+# This lowest pt bin for the crack is always problematic with huge background for the failing probes
+# The background never forms a peak, so try to keep acmsF very low and keep gammaF positive
+# Limit the freedom for the Z signal to avoid the fit goes crazy with a broad sigma etc...
+if era=='2016':
+  tnpParNomFit['bin02'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                           "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.5,2.0]",
+                           "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                           "acmsF[35.,20.,40.]","betaF[0.05,0.01,0.08]","gammaF[0.1, 0, 2]","peakF[90.0]"]
+  tnpParNomFit['bin07'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                           "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.5,2.0]",
+                           "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                           "acmsF[35.,20.,40.]","betaF[0.05,0.01,0.08]","gammaF[0.1, 0, 2]","peakF[90.0]"]
+if era=='2017':
+  tnpParNomFit['bin02'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                           "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,2.0]",
+                           "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                           "acmsF[35.,20.,40.]","betaF[0.05,0.01,0.08]","gammaF[0.1, 0, 2]","peakF[90.0]"]
+  tnpParNomFit['bin07'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                           "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.5,2.0]",
+                           "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                           "acmsF[35.,20.,40.]","betaF[0.05,0.01,0.08]","gammaF[0.1, 0, 2]","peakF[90.0]"]
+
+
+
+if 'MvaLoose' in main.args.flag:
+  if era=='2016':
+    tnpParNomFit['bin00'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                             "meanF[-0.0,-1.0,5.0]","sigmaF[0.9,0.5,2.0]",
+                             "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                             "acmsF[60.,40.,80.]","betaF[0.05,0.01,0.08]","gammaF[0.1, -2, 2]","peakF[90.0]"]
+  if era=='2017':
+    tnpParNomFit['bin00'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                             "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
+                             "acmsP[50.,40.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                             "acmsF[50.,40.,80.]","betaF[0.05,0.01,0.08]","gammaF[0.1, -2, 2]","peakF[90.0]"]
+
+
 
 tnpParAltSigFit = [
     "meanP[-0.0,-5.0,5.0]","sigmaP[1,0.7,6.0]","alphaP[2.0,1.2,3.5]" ,'nP[3,-5,5]',"sigmaP_2[1.5,0.5,6.0]","sosP[1,0.5,5.0]",
