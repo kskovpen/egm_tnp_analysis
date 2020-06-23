@@ -1,5 +1,7 @@
 from libPython.tnpClassUtils import tnpSample
 import os
+from libPython.logger import getLogger
+log = getLogger()
 
 # tnpTuple top directory
 tnpTuplesDirectory = '/eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-06-09' # on lxplus
@@ -36,12 +38,14 @@ samples += [
 # 2018
 dir2018 = os.path.join(tnpTuplesDirectory, '2018/merged')
 samples += [
-  tnpSample('2018_DY_NLO', os.path.join(dir2018, 'DY_NLO.root'),   isMC = True),
-  tnpSample('2018_DY_pow', os.path.join(dir2018, 'DY_pow.root'),   isMC = True),
-  tnpSample('Run2018A' ,   os.path.join(dir2018, 'Run2018A.root'), lumi = 10.723),
-  tnpSample('Run2018B' ,   os.path.join(dir2018, 'Run2018B.root'), lumi = 5.964),
-  tnpSample('Run2018C' ,   os.path.join(dir2018, 'Run2018C.root'), lumi = 6.382),
-  tnpSample('Run2018D' ,   os.path.join(dir2018, 'Run2018D.root'), lumi = 29.181),
+  tnpSample('2018_DY_NLO',     os.path.join(dir2018, 'DY_NLO.root'),     isMC = True),
+  tnpSample('2018_DY_NLO_ext', os.path.join(dir2018, 'DY_NLO_ext.root'), isMC = True),
+  tnpSample('2018_DY_pow',     os.path.join(dir2018, 'DY_pow.root'),     isMC = True),
+  tnpSample('2018_DY_LO',      os.path.join(dir2018, 'DY.root'),         isMC = True),
+  tnpSample('Run2018A' ,       os.path.join(dir2018, 'Run2018A.root'),   lumi = 10.723),
+  tnpSample('Run2018B' ,       os.path.join(dir2018, 'Run2018B.root'),   lumi = 5.964),
+  tnpSample('Run2018C' ,       os.path.join(dir2018, 'Run2018C.root'),   lumi = 6.382),
+  tnpSample('Run2018D' ,       os.path.join(dir2018, 'Run2018D.root'),   lumi = 29.181),
 ]
 
 # UL2017
@@ -65,5 +69,7 @@ def getSample(name, rename=None):
       if i.name==name:
         toReturn = i.clone()
         break
+    else:
+      log.error('%s not in defined samples!' % name)
   if rename: toReturn.rename(rename)
   return toReturn
