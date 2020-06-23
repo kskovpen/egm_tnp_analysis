@@ -1,13 +1,18 @@
 #!/bin/env python3
-import subprocess, os, argparse
+import subprocess, os, argparse,time
 
 #
 # Argparser
 #
 parser = argparse.ArgumentParser(description='tnp EGM fitter')
 parser.add_argument('--createHists', action='store_true', help = 'Create histograms')
-parser.add_argument('--firstRound', action='store_true', help = 'Do first round of fits (nominal, altBkg and altSig-mc')
+parser.add_argument('--all', action='store_true', help = 'Do all type of fits (nominal, altBkg and altSig)')
+parser.add_argument('--altSig', action='store_true', help = 'Do altSig fits')
+parser.add_argument('--altBkg', action='store_true', help = 'Do altBkg fits') 
+parser.add_argument('--nominal', action='store_true', help = 'Do nominal fits')
 parser.add_argument('--sumUp', action='store_true', help = 'Create the final SF plots')
+parser.add_argument('--year', default=None, help = 'Only for specific era')
+parser.add_argument('--iBin', type = int, default=-1, help='bin number (to refit individual bin)')
 args = parser.parse_args()
 
 
@@ -37,8 +42,8 @@ def cream02(command, logFile):
       time.sleep(10)
       cream02(command, logFile)
   except subprocess.CalledProcessError as e:
-    print(e.output)
-    exit(1)
+    time.sleep(10)
+    cream02(command, logFile)
 
 
 #
@@ -51,7 +56,10 @@ workingpoints = {'2016': 'passEle27', '2017': 'passEle32', '2018': 'passEle32'}
 # Workflow
 #
 for era, workingpoint in workingpoints.items():
+    if args.year and args.year != era: continue
+
     baseCommand = 'python tnpEGM_fitter.py etc/config/%s --flag=%s --configOpts="era=%s"' % (settings, workingpoint, era)
+    selectBin   = ('--iBin %s' % args.iBin) if args.iBin >= 0 else ''
 
     if args.createHists:
       system('%s --checkBins' % (baseCommand))
@@ -60,17 +68,15 @@ for era, workingpoint in workingpoints.items():
         logFile = 'log/createHists/%s-%s-%s' % (workingpoint, sample, era)
         cream02('%s --createHists --sample=%s' % (baseCommand, sample), logFile)
 
-    if args.firstRound:
+    if args.all or args.nominal:
       logFile = 'log/fits-nominal/%s-%s' % (workingpoint, era)
-      cream02('%s --doFit' % (baseCommand), logFile)
+      cream02('%s --doFit %s' % (baseCommand, selectBin), logFile)
+    if args.all or args.altSig:
       logFile = 'log/fits-altSig-mc/%s-%s' % (workingpoint, era)
-      cream02('%s --doFit --mcSig --altSig;%s --doFit --altSig' % (baseCommand, baseCommand), logFile)
+      cream02('%s --doFit --mcSig --altSig %s;%s --doFit --altSig %s' % (baseCommand, selectBin, baseCommand, selectBin), logFile)
+    if args.all or args.altBkg:
       logFile = 'log/fits-altBkg/%s-%s' % (workingpoint, era)
-      cream02('%s --doFit --altBkg' % (baseCommand), logFile)
-
-    # Now fix fits
-    # e.g.
-    #os.system('python tnpEGM_fitter.py etc/config/%s --flag myWP %s --doFit --iBin ib' % (settings, workingpoint))
+      cream02('%s --doFit --altBkg %s' % (baseCommand, selectBin), logFile)
      
     # Then sum up
     if args.sumUp:
