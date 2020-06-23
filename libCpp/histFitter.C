@@ -35,8 +35,6 @@ public:
   void useMinos(bool minos = true) {_useMinos = minos;}
   void textParForCanvas(RooFitResult *resP, RooFitResult *resF, TPad *p);
   
-  void fixSigmaFtoSigmaP(bool fix=true) { _fixSigmaFtoSigmaP= fix;}
-
   void setFitRange(double xMin,double xMax) { _xFitMin = xMin; _xFitMax = xMax; }
 private:
   RooWorkspace *_work;
@@ -44,11 +42,10 @@ private:
   TFile *_fOut;
   double _nTotP, _nTotF;
   bool _useMinos;
-  bool _fixSigmaFtoSigmaP;
   double _xFitMin,_xFitMax;
 };
 
-tnpFitter::tnpFitter(TFile *filein, std::string histname   ) : _useMinos(false),_fixSigmaFtoSigmaP(false) {
+tnpFitter::tnpFitter(TFile *filein, std::string histname   ) : _useMinos(false){
   RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
   _histname_base = histname;  
 
@@ -75,7 +72,7 @@ tnpFitter::tnpFitter(TFile *filein, std::string histname   ) : _useMinos(false),
   _xFitMax = 120;
 }
 
-tnpFitter::tnpFitter(TH1 *hPass, TH1 *hFail, std::string histname  ) : _useMinos(false),_fixSigmaFtoSigmaP(false) {
+tnpFitter::tnpFitter(TH1 *hPass, TH1 *hFail, std::string histname  ) : _useMinos(false){
   RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
   _histname_base = histname;
   
@@ -162,10 +159,6 @@ void tnpFitter::fits(bool mcTruth,string title, bool isaddGaus) {
   _work->var("x")->setRange("fitMassRange",_xFitMin,_xFitMax);
   RooFitResult* resPass = pdfPass->fitTo(*_work->data("hPass"),Minos(_useMinos),SumW2Error(kTRUE),Save(),Range("fitMassRange"));
   //RooFitResult* resPass = pdfPass->fitTo(*_work->data("hPass"),Minos(_useMinos),SumW2Error(kTRUE),Save());
-  if( _fixSigmaFtoSigmaP ) {
-    _work->var("sigmaF")->setVal( _work->var("sigmaP")->getVal() );
-    _work->var("sigmaF")->setConstant();
-  }
 
   _work->var("sigmaF")->setVal(_work->var("sigmaP")->getVal());
   _work->var("sigmaF")->setRange(0.8* _work->var("sigmaP")->getVal(), 3.0* _work->var("sigmaP")->getVal());

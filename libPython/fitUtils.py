@@ -126,7 +126,6 @@ def histFitterNominal( sample, tnpBin, tnpWorkspaceParam ):
     histZLineShapeF = fileTruth.Get('%s_Fail'%tnpBin['name'])
     if ptMin( tnpBin ) > minPtForSwitch: 
         histZLineShapeF = fileTruth.Get('%s_Pass'%tnpBin['name'])
-#        fitter.fixSigmaFtoSigmaP()
     fitter.setZLineShapes(histZLineShapeP,histZLineShapeF)
 
     fileTruth.Close()
@@ -177,7 +176,6 @@ def histFitterAltSig( sample, tnpBin, tnpWorkspaceParam, isaddGaus=0 ):
     if sample.isMC and ptMin( tnpBin ) > minPtForSwitch:     
         hF = infile.Get('%s_Pass' % tnpBin['name'] )
     fitter = tnpFitter( hP, hF, tnpBin['name'] )
-#    fitter.fixSigmaFtoSigmaP()
     infile.Close()
 
     ## setup
@@ -240,7 +238,6 @@ def histFitterAltBkg( sample, tnpBin, tnpWorkspaceParam ):
     histZLineShapeF = fileTruth.Get('%s_Fail'%tnpBin['name'])
     if ptMin( tnpBin ) > minPtForSwitch: 
         histZLineShapeF = fileTruth.Get('%s_Pass'%tnpBin['name'])
-#        fitter.fixSigmaFtoSigmaP()
     fitter.setZLineShapes(histZLineShapeP,histZLineShapeF)
     fileTruth.Close()
 
