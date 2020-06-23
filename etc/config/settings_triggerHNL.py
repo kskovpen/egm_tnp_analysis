@@ -42,8 +42,8 @@ elif era=='2017':
 elif era=='2018':
   samplesDef = {
       'data'   : getSample(['Run2018A', 'Run2018B', 'Run2018C', 'Run2018D'], rename='2018'),
-      'mcNom'  : getSample('2018_DY_NLO'),
-      'mcAlt'  : getSample('2018_DY_pow'),
+      'mcNom'  : getSample(['2018_DY_NLO', '2018_DY_NLO_ext']),
+      'mcAlt'  : getSample('2018_DY_LO'),
       'tagSel' : getSample('2018_DY_NLO', rename='2018_DY_NLO_altTag'),
   }
 else:
@@ -93,24 +93,61 @@ additionalCuts = {}
 #############################################################
 ########## fitting params to tune fit by hand if necessary
 #############################################################
-tnpParNomFit = [
-    "meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
-    "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
-    "acmsP[60.,50.,150.]","betaP[0.05,0.01,0.5]","gammaP[0.1, -2, 2]","peakP[90.0]",
-    "acmsF[60.,50.,150.]","betaF[0.05,0.01,0.5]","gammaF[0.1, -2, 2]","peakF[90.0]",
-    ]
+# Some documentation which goes in way too much detail as you are supposed to do in CMS, but I'll do it anyway:
+# --> signal shape is described by a gaussian function
+#   this shape of this gaussian is as usual defined by a mean and a variance (sigma),
+#   convoluted with the Z shape as obtained from egm_tnp_analysis/etc/inputs/ZeeGenLevel.root
+#   i.e. the mean parameter shifts the Z peak (in GeV), and sigma makes it more or less wide
+#   probably we should keep the ranges for these parameters small enough to avoid incorporating background in the Z peak
+# --> background is described by a
+#   an exponential defined as exp((peak-x)*gamma)
+#   which is then multiplied with the error function erfc((alpha-x)*beta)
+#   so probably we want to have alpha not in the Z peak range, otherwise you risk to construct a background shape which looks
+#   a bit like a strange Z peak, especially in combination with a small beta (unless we're in a low pt bin where we only expect to construct background anyway)
+#   I guess it is good to allow for a large beta in case we have minimal/flat background
+#   I still do not fully understand all the strange situations you can get out of these shapes though....
+tnpParNomFit = {'default':            ["meanP[-0.0,-1.0,1.0]","sigmaP[0.9,0.3,2.]",
+                                       "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.3,2.]",
+                                       "acmsP[60.,50.,75.]","betaP[0.5,0.01,5]","gammaP[0.1, -5, 5]","peakP[90.0]",
+                                       "acmsF[60.,50.,75.]","betaF[0.5,0.01,5]","gammaF[0.1, -5, 5]","peakF[90.0]"]
+               }
 
+if era=='2018' or era=='2017':
+  tnpParNomFit['bin00'] =             ["meanP[-0.0,-1.0,1.0]","sigmaP[0.9,0.7,1.2]",
+                                       "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.3,2.]",
+                                       "acmsP[85.,70.,90.]","betaP[0.127,0.01,0.2]","gammaP[0.252, .2, .5]","peakP[90.0]",
+                                       "acmsF[60.,50.,85.]","betaF[0.5,0.01,5]","gammaF[0.1, -5, 5]","peakF[90.0]"]
+  tnpParNomFit['bin09'] =             ["meanP[-0.0,-1.0,1.0]","sigmaP[0.9,0.7,1.2]",
+                                       "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.3,2.]",
+                                       "acmsP[85.,70.,90.]","betaP[0.127,0.01,0.2]","gammaP[0.252, .2, .5]","peakP[90.0]",
+                                       "acmsF[60.,50.,85.]","betaF[0.5,0.01,5]","gammaF[0.1, -5, 5]","peakF[90.0]"]
+
+
+# AltSigFit
 tnpParAltSigFit = [
     "meanP[-0.0,-5.0,5.0]","sigmaP[1,0.7,6.0]","alphaP[2.0,1.2,3.5]" ,'nP[3,-5,5]',"sigmaP_2[1.5,0.5,6.0]","sosP[1,0.5,5.0]",
     "meanF[-0.0,-5.0,5.0]","sigmaF[2,0.7,15.0]","alphaF[2.0,1.2,3.5]",'nF[3,-5,5]',"sigmaF_2[2.0,0.5,6.0]","sosF[1,0.5,5.0]",
     "acmsP[60.,50.,75.]","betaP[0.04,0.01,0.06]","gammaP[0.1, 0.005, 1]","peakP[90.0]",
     "acmsF[60.,50.,75.]","betaF[0.04,0.01,0.06]","gammaF[0.1, 0.005, 1]","peakF[90.0]",
     ]
-     
-tnpParAltBkgFit = [
-    "meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
-    "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
-    "alphaP[0.,-5.,5.]",
-    "alphaF[0.,-5.,5.]",
-    ]
-        
+
+
+# AltBkgFit
+tnpParAltBkgFit = {'default':         ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,3.0]",
+                                       "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,3.0]",
+                                       "alphaP[0.,-5.,5.]",
+                                       "alphaF[0.,-5.,5.]",
+                                      ]
+                  }
+
+if era=='2017':
+  tnpParAltBkgFit['bin00'] =          ["meanP[-0.0,-3.0,3.0]","sigmaP[0.9,0.5,3.0]",
+                                       "meanF[-0.0,-3.0,3.0]","sigmaF[1.3,0.5,3.0]",
+                                       "alphaP[0.,-5.,5.]",
+                                       "alphaF[0.1,-5.,5.]"]
+  tnpParAltBkgFit['bin09'] =          ["meanP[-0.0,-3.0,3.0]","sigmaP[0.9,0.5,3.0]",
+                                       "meanF[-0.0,-3.0,3.0]","sigmaF[0.9,0.5,3.0]",
+                                       "alphaP[0.,-5.,5.]",
+                                       "alphaF[0.4,-5.,5.]"]
+
+
