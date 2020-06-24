@@ -9,15 +9,15 @@ import math
 # Check if a string can be a number
 def is_number(s):
     try:
-        float(s)
-        return True
+        x = float(s)
+        return not math.isnan(x)
     except ValueError:
         return False
 
 cdef void removeNegativeBins(TH1D* h):
-    for i in xrange(h.GetNbinsX()):
-        if (h.GetBinContent(i) < 0):
-            h.SetBinContent(i, 0)
+    for i in xrange(h.GetNbinsX()+2):
+      if not is_number(h.GetBinContent(i)) or h.GetBinContent(i) < 0:
+        h.SetBinContent(i, 0)
 
 ##################################
 # To Fill Tag and Probe histograms
@@ -148,7 +148,7 @@ def makePassFailHistograms( sample, flag, bindef, var ):
 
         for bnidx in range(nbins):
             weight = bin_formulas[bnidx].EvalInstance(0)
-            if weight:
+            if is_number(weight) and weight:
                 if flag_formula.EvalInstance(0):
                     hPass[bnidx].Fill(pair_mass, weight)
                 else:
