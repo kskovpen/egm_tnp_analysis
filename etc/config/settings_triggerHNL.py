@@ -99,6 +99,7 @@ additionalCuts = {}
 #   convoluted with the Z shape as obtained from egm_tnp_analysis/etc/inputs/ZeeGenLevel.root
 #   i.e. the mean parameter shifts the Z peak (in GeV), and sigma makes it more or less wide
 #   probably we should keep the ranges for these parameters small enough to avoid incorporating background in the Z peak
+#   Note: the sigmaF parameter is useless, the code automatically fits in the range [0.8*sigmaP, 3*sigmaP]
 # --> background is described by a
 #   an exponential defined as exp((peak-x)*gamma)
 #   which is then multiplied with the error function erfc((alpha-x)*beta)

@@ -131,38 +131,30 @@ tnpParNomFit = {'default':  ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
 # This lowest pt bin for the crack is always problematic with huge background for the failing probes
 # The background never forms a peak, so try to keep acmsF very low and keep gammaF positive
 # Limit the freedom for the Z signal to avoid the fit goes crazy with a broad sigma etc...
+newParameters = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                 "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.6,1.6]",
+                 "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                 "acmsF[40.,20.,70.]","betaF[0.06,0.03,0.08]","gammaF[0.06, 0.05, 2]","peakF[90.0]"]
+tnpParNomFit['bin02'] = newParameters
+tnpParNomFit['bin07'] = newParameters
+
+# Trying to fix the forward bin low pt
 if era=='2016':
-  tnpParNomFit['bin02'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
-                           "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.5,2.0]",
-                           "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
-                           "acmsF[35.,20.,40.]","betaF[0.05,0.01,0.08]","gammaF[0.1, 0, 2]","peakF[90.0]"]
-  tnpParNomFit['bin07'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
-                           "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.5,2.0]",
-                           "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
-                           "acmsF[35.,20.,40.]","betaF[0.05,0.01,0.08]","gammaF[0.1, 0, 2]","peakF[90.0]"]
-if era=='2017':
-  tnpParNomFit['bin02'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
-                           "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,2.0]",
-                           "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
-                           "acmsF[35.,20.,40.]","betaF[0.05,0.01,0.08]","gammaF[0.1, 0, 2]","peakF[90.0]"]
-  tnpParNomFit['bin07'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
-                           "meanF[-0.0,-1.0,1.0]","sigmaF[0.9,0.5,2.0]",
-                           "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
-                           "acmsF[35.,20.,40.]","betaF[0.05,0.01,0.08]","gammaF[0.1, 0, 2]","peakF[90.0]"]
-
-
-
-if 'MvaLoose' in main.args.flag:
-  if era=='2016':
+  if 'MvaLoose' in main.args.flag:
     tnpParNomFit['bin00'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
                              "meanF[-0.0,-1.0,5.0]","sigmaF[0.9,0.5,2.0]",
                              "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
                              "acmsF[60.,40.,80.]","betaF[0.05,0.01,0.08]","gammaF[0.1, -2, 2]","peakF[90.0]"]
-  if era=='2017':
-    tnpParNomFit['bin00'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
-                             "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
-                             "acmsP[50.,40.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
-                             "acmsF[50.,40.,80.]","betaF[0.05,0.01,0.08]","gammaF[0.1, -2, 2]","peakF[90.0]"]
+
+# It is kind of strange that the -eta forward bin always fails with the default arguments, while the almost exactly similar shapes in +eta get fitted correctly
+# Of course RooFit works in mysterious ways and is too lazy to even move a bit away from the starting point you feed it,
+# I have zero confidence in the code behind RooFit, but unfortunately it is the standard in particle physics
+if era=='2017':
+  tnpParNomFit['bin00'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
+                           "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
+                           "acmsP[60.,50.,80.]","betaP[0.04,0.01,0.08]","gammaP[0.1, -2., 2.]","peakP[90.0]",
+                           "acmsF[50.,40.,80.]","betaF[0.01,0.005,0.08]","gammaF[.02, -2., 2.]","peakF[90.0]"]
+
 
 
 
