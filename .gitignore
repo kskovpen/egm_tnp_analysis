@@ -4,3 +4,4 @@
 **/*.d
 libPython/build/
 log
+libPython/histUtils.cpp

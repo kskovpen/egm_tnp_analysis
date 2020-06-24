@@ -7,7 +7,7 @@
 git clone -b egm_tnp_CleanedCodeForUL_17March2020  https://github.com/lsoffi/egm_tnp_analysis
 cd egm_tnp_analysis
 source etc/scripts/setup.sh
-make
+make cython-build
 ```
 
 > The source etc/scripts/setup.sh does not work on T2\_BE\_IIHE, they seem to be lxplus specific. I am actually not sure if they are really needed, this package seem to work as long as you have a decent version of python around (e.g. a cmsenv within a not too old CMSSW version will be sufficient) and use "export PYTHONPATH=.:$PYTHONPATH".
