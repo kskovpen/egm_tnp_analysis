@@ -52,19 +52,22 @@ def getEffiFromCutAndCount(fname, bindef):
 
     return computeEffi(nP,nF,eP,eF)
 
+def getFitParameter(fnameFit, fit, paramName):
+    rootFile = readRootFile(fnameFit)
+    fitRes = rootFile.Get(fit)
+    try:
+      param = fitRes.floatParsFinal().find(paramName)
+      return param.getVal(), param.getError()
+    except:
+      log.error('Did not find %s in fitresults %s in file %s' % (paramName, fit, fnameFit))
+    finally:
+      rootFile.Close()
+
 def getEffiFromFit(fnameFit, fnameHist, bindef):
     rootfile = readRootFile(fnameFit)
-    fitresP = rootfile.Get('%s_resP' % bindef['name'])
-    fitresF = rootfile.Get('%s_resF' % bindef['name'])
 
-    fitP = fitresP.floatParsFinal().find('nSigP')
-    fitF = fitresF.floatParsFinal().find('nSigF')
-
-    nP = fitP.getVal()
-    nF = fitF.getVal()
-    eP = fitP.getError()
-    eF = fitF.getError()
-    rootfile.Close()
+    nP, eP = getFitParameter(fnameFit, '%s_resP' % bindef['name'], 'nSigP')
+    nF, eF = getFitParameter(fnameFit, '%s_resF' % bindef['name'], 'nSigF')
 
     rootfile = readRootFile(fnameHist)
     hP = rootfile.Get('%s_Pass'%bindef['name'])
