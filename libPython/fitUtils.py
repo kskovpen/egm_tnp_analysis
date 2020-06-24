@@ -89,6 +89,8 @@ def decodeWorkspaceParam(tnpWorkspaceParam, tnpBin):
           return tnpWorkspaceParam[key]
       else:
         return tnpWorkspaceParam['default']
+    else:
+      return tnpWorkspaceParam
 
 
 #############################################################
@@ -116,8 +118,7 @@ def histFitterNominal( sample, tnpBin, tnpWorkspaceParam ):
 
     ## setup
     fitter.useMinos()
-    rootfile = rt.TFile(sample.nominalFit,'update')
-    fitter.setOutputFile( rootfile )
+    fitter.setOutputFile(sample.nominalFit)
     
     ## generated Z LineShape
     ## for high pT change the failing spectra to any probe to get statistics
@@ -140,7 +141,6 @@ def histFitterNominal( sample, tnpBin, tnpWorkspaceParam ):
     title = title.replace('probe_sc_eta','#eta_{SC}')
     title = title.replace('probe_Ele_pt','p_{T}')
     fitter.fits(sample.mcTruth,title)
-    rootfile.Close()
 
 
 
@@ -179,8 +179,7 @@ def histFitterAltSig( sample, tnpBin, tnpWorkspaceParam, isaddGaus=0 ):
     infile.Close()
 
     ## setup
-    rootfile = rt.TFile(sample.altSigFit,'update')
-    fitter.setOutputFile( rootfile )
+    fitter.setOutputFile(sample.altSigFit)
     
     ## generated Z LineShape
     fileTruth = rt.TFile('etc/inputs/ZeeGenLevel.root','read')
@@ -198,8 +197,6 @@ def histFitterAltSig( sample, tnpBin, tnpWorkspaceParam, isaddGaus=0 ):
     title = title.replace('probe_sc_eta','#eta_{SC}')
     title = title.replace('probe_Ele_pt','p_{T}')
     fitter.fits(sample.mcTruth,title, isaddGaus)
-
-    rootfile.Close()
 
 
 
@@ -227,8 +224,7 @@ def histFitterAltBkg( sample, tnpBin, tnpWorkspaceParam ):
     infile.Close()
 
     ## setup
-    rootfile = rt.TFile(sample.altBkgFit,'update')
-    fitter.setOutputFile( rootfile )
+    fitter.setOutputFile(sample.altBkgFit)
 #    fitter.setFitRange(65,115)
 
     ## generated Z LineShape
@@ -251,6 +247,5 @@ def histFitterAltBkg( sample, tnpBin, tnpWorkspaceParam ):
     title = title.replace('probe_sc_eta','#eta_{SC}')
     title = title.replace('probe_Ele_pt','p_{T}')
     fitter.fits(sample.mcTruth,title)
-    rootfile.Close()
 
 
