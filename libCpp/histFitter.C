@@ -14,6 +14,7 @@
 #include "RooCBExGaussShape.h"
 #include "RooCMSShape.h"
 
+#include <stdlib.h>
 #include <vector>
 #include <string>
 #ifdef __CINT__
@@ -30,7 +31,7 @@ public:
   ~tnpFitter(void) {if( _work != 0 ) delete _work; }
   void setZLineShapes(TH1 *hZPass, TH1 *hZFail );
   void setWorkspace(std::vector<std::string>, bool isaddGaus=false);
-  void setOutputFile(TFile *fOut ) {_fOut = fOut;}
+  void setOutputFile(std::string fOutName ) {_fOutName = fOutName;}
   void fits(bool mcTruth,std::string title = "", bool isaddGaus=false);
   void useMinos(bool minos = true) {_useMinos = minos;}
   void textParForCanvas(RooFitResult *resP, RooFitResult *resF, TPad *p);
@@ -39,7 +40,7 @@ public:
 private:
   RooWorkspace *_work;
   std::string _histname_base;
-  TFile *_fOut;
+  std::string _fOutName;
   double _nTotP, _nTotF;
   bool _useMinos;
   double _xFitMin,_xFitMax;
@@ -187,12 +188,14 @@ void tnpFitter::fits(bool mcTruth,string title, bool isaddGaus) {
   c.cd(2); pPass->Draw();
   c.cd(3); pFail->Draw();
 
-  _fOut->cd();
+  // Actually here we should preferably have some lock, though let's hope race conditions are quite rare here
+  // But for some stupid reason this code is in C++ and I am too lazy search for a complicated inplementation, it's probably easier to rewrite the whole file in python
+  TFile *fOut = new TFile(_fOutName.c_str(), "update");
+  fOut->cd();
   c.Write(TString::Format("%s_Canv",_histname_base.c_str()),TObject::kOverwrite);
   resPass->Write(TString::Format("%s_resP",_histname_base.c_str()),TObject::kOverwrite);
   resFail->Write(TString::Format("%s_resF",_histname_base.c_str()),TObject::kOverwrite);
-
-  
+  fOut->Close();
 }
 
 
