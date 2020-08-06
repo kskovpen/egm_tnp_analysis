@@ -49,7 +49,7 @@ def cream02(command, logFile):
 # Settings
 #
 settings      = 'settings_leptonMva.py'
-workingpoints = ['passingLeptonMvaTight', 'passingLeptonMvaMedium', 'passingLeptonMvaLoose', 'passingLeptonMvaVLoose', 'passingLeptonMvaTightAnd3Charge', 'passingLeptonMvaMediumAnd3Charge']
+workingpoints = ['passingLeptonMvaLoose', 'passingLeptonMvaVLoose', 'passingLeptonMvaTightAnd3Charge', 'passingLeptonMvaMediumAnd3Charge', 'passingLeptonMvaTightAnd3ChargeAndStuffWeCopiedFrom2015', 'passingLeptonMvaMediumAnd3ChargeAndStuffWeCopiedFrom2015']
 eras          = ['2016', '2017', '2018']
 
 

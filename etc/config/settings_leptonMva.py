@@ -11,13 +11,11 @@ for option in main.args.configOpts.split(';'):
 
 
 # Baseline selection as defined in https://indico.cern.ch/event/923174/contributions/3889049/attachments/2050271/3436370/kskovpenLeptonMVA20200603.pdf (slide 5)
-baseline = 'el_miniIsoAll_fall17 < 0.4 && el_mHits < 2 && abs(el_sip) < 8 && abs(el_dxy) < 0.05 && abs(el_dz) < 0.1'
+baseline = 'el_miniIsoAll_fall17 < 0.4 && el_mHits < 2 && abs(el_sip) < 8 && abs(el_dxy) < 0.05 && abs(el_dz) < 0.1 && el_hasMatchedConversion<0.5'
 
-# Baseline selection tZq (need new TnPTree's and especially someone needs to come up with an explanation why you need such a complicated baseline when you apply an mva)
+# Baseline selection tZq (only el_hasMatchedConversion is currently still missing)
 # Bullshit alert
-baselineTZQ  = 'el_mHits==0 && abs(el_sip) < 8 && abs(el_dxy) < 0.05 && abs(el_dz) < 0.1'
-baselineTZQ += 'CONEPT > 10 && CONVERSIONREJECTION && passingMVA94Xwp80noisoV2 && DEEPCSV < ??'
-baselineTZQ += 'RELISO < 0.4'
+baselineTZQ  = baseline + ' '
 baselineTZQ += '&& ((abs(el_eta) < 1.4442 && el_sieie < 0.011) || (abs(el_eta) > 1.4442 && el_sieie < 0.030))'
 baselineTZQ += '&& el_hoe < 0.10 && el_1overEminus1overP > -0.04'
 # End bullshit alert
@@ -25,12 +23,12 @@ baselineTZQ += '&& el_hoe < 0.10 && el_1overEminus1overP > -0.04'
 
 # flag to be Tested
 flags = {
-    'passingLeptonMvaTight'            : '(%s && el_leptonMva_TOP > 0.9)' % baseline,
-    'passingLeptonMvaMedium'           : '(%s && el_leptonMva_TOP > 0.4)' % baseline,
     'passingLeptonMvaLoose'            : '(%s && el_leptonMva_TOP > 0.0)' % baseline,
     'passingLeptonMvaVLoose'           : '(%s && el_leptonMva_TOP > -.55)' % baseline,
     'passingLeptonMvaTightAnd3Charge'  : '(%s && el_leptonMva_TOP > 0.9 && el_3charge==1)' % baseline,
     'passingLeptonMvaMediumAnd3Charge' : '(%s && el_leptonMva_TOP > 0.4 && el_3charge==1)' % baseline,
+    'passingLeptonMvaTightAnd3ChargeAndStuffWeCopiedFrom2015'  : '(%s && el_leptonMva_TOP > 0.9 && el_3charge==1)' % baselineTZQ,
+    'passingLeptonMvaMediumAnd3ChargeAndStuffWeCopiedFrom2015' : '(%s && el_leptonMva_TOP > 0.4 && el_3charge==1)' % baselineTZQ,
     }
 
 
