@@ -4,8 +4,8 @@ from libPython.logger import getLogger
 log = getLogger()
 
 # tnpTuple top directory
-tnpTuplesDirectory = '/eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-06-09' # on lxplus
-tnpTuplesDirectory = '/pnfs/iihe/cms/store/user/tomc/tnpTuples/2020-06-09'        # on T2_BE_IIHE
+tnpTuplesDirectory = '/eos/cms/store/group/phys_egamma/tnpTuples/tomc/2020-07-10' # on lxplus
+tnpTuplesDirectory = '/pnfs/iihe/cms/store/user/tomc/tnpTuples/2020-07-10'        # on T2_BE_IIHE
 
 # 2016
 dir2016 = os.path.join(tnpTuplesDirectory, '2016/merged')
