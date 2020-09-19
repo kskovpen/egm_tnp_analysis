@@ -74,10 +74,17 @@ class efficiency:
         self.syst[self.iAltTagSelec+2] = systAltTagSelec
         
         self.systCombined = 0
+        self.statCombined = 0
+        self.systAndStatCombined = 0
         for isyst in range(6):
-            self.systCombined += self.syst[isyst]*self.syst[isyst];
+            systSquared = self.syst[isyst]*self.syst[isyst]
+            self.systAndStatCombined += systSquared 
+            if 'stat' in self.getSystematicNames()[isyst]: self.statCombined += systSquared 
+            else:                                     self.systCombined += systSquared 
 
-        self.systCombined = math.sqrt(self.systCombined)
+        self.systAndStatCombined = math.sqrt(self.systAndStatCombined)
+        self.statCombined        = math.sqrt(self.statCombined)
+        self.systCombined        = math.sqrt(self.systCombined)
         
 
     def __add__(self,eff):
@@ -292,27 +299,30 @@ class efficiencyList:
                         if not self.effList[ptBin][etaBin].effMC:
                             log.error('MC efficiency is 0 in ptBin %s and etaBin %s' % (ptBin, etaBin))
                             continue
-                        h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].effData      / self.effList[ptBin][etaBin].effMC)
-                        h2.SetBinError  (ix,iy, self.effList[ptBin][etaBin].systCombined / averageMC )
-                        if onlyError   == 0 :
-                            h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].systCombined      / averageMC  )
-                        if   onlyError == -3 :
-                            h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].effData      )
-                            h2.SetBinError  (ix,iy, self.effList[ptBin][etaBin].systCombined * self.effList[ptBin][etaBin].effMC / averageMC )
+                        h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].effData/self.effList[ptBin][etaBin].effMC)
+                        h2.SetBinError  (ix,iy, self.effList[ptBin][etaBin].systAndStatCombined/averageMC)
+
+                        ### I know, this is very ugly and bad coding, but I'm not going to redesign this whole package from scratch, I just build further on the ugly code which was already here
+                        if onlyError == -5:
+                            h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].statCombined/averageMC)
+                        elif onlyError == -4:
+                            h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].systCombined/averageMC)
+                        elif onlyError == -3 :
+                            h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].effData)
+                            h2.SetBinError  (ix,iy, self.effList[ptBin][etaBin].systAndStatCombined*self.effList[ptBin][etaBin].effMC/averageMC)
                         elif onlyError == -2 :
                             h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].effMC)
                             h2.SetBinError  (ix,iy, 0 )
                         elif onlyError == -1 :
-                            h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].effData      / self.effList[ptBin][etaBin].effMC)
-                            h2.SetBinError  (ix,iy, self.effList[ptBin][etaBin].systCombined / averageMC )
-
-                        if onlyError   == 0 :
-                                h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].systCombined      / averageMC  )
+                            h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].effData/self.effList[ptBin][etaBin].effMC)
+                            h2.SetBinError  (ix,iy, self.effList[ptBin][etaBin].systAndStatCombined/averageMC)
+                        elif onlyError == 0 :
+                            h2.SetBinContent(ix,iy, self.effList[ptBin][etaBin].systAndStatCombined/averageMC)
                         elif onlyError >= 1 and onlyError <= 6:
                             denominator = averageMC
                             if relError:
-                                denominator = self.effList[ptBin][etaBin].systCombined
-                            h2.SetBinContent(ix,iy, abs(self.effList[ptBin][etaBin].syst[onlyError-1]) / denominator )
+                                denominator = self.effList[ptBin][etaBin].systAndStatCombined
+                            h2.SetBinContent(ix,iy, abs(self.effList[ptBin][etaBin].syst[onlyError-1])/denominator)
 
         h2.GetXaxis().SetTitle("SuperCluster #eta")
         h2.GetYaxis().SetTitle("p_{T} [GeV]")

@@ -201,6 +201,7 @@ if args.sumUp:
         ### formatting assuming 2D bining -- to be fixed        
         v1Range = tnpBins['bins'][ib]['title'].split(';')[1].split('<')
         v2Range = tnpBins['bins'][ib]['title'].split(';')[2].split('<')
+#        if float(v2Range[0]) < (30 if '2016' in args.configOpts else 35): continue
         if ib == 0 :
             astr = '### var1 : %s' % v1Range[1]
             log.info(astr)

@@ -353,6 +353,12 @@ def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
     h2EffMC   = effGraph.ptEtaScaleFactor_2DHisto(-2)
     h2SF      = effGraph.ptEtaScaleFactor_2DHisto(-1)
     h2Error   = effGraph.ptEtaScaleFactor_2DHisto( 0)  ## only error bars
+    h2Stat    = effGraph.ptEtaScaleFactor_2DHisto(-5)  ## only stat (I know horrible code, I'm just building on previous code here, feel free to redesign the whole package)
+    h2Sys     = effGraph.ptEtaScaleFactor_2DHisto(-4)  ## only sys
+
+    for h in [h2Stat, h2Sys, h2Error]:
+      h.SetMinimum(0)
+      h.SetMaximum(min(h.GetMaximum(),0.2))    
 
     rt.gStyle.SetPalette(1)
     rt.gStyle.SetPaintTextFormat('1.3f');
@@ -379,8 +385,6 @@ def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
     h2SF.DrawCopy("colz TEXT45")
     
     c2D.cd(2)
-    h2Error.SetMinimum(0)
-    h2Error.SetMaximum(min(h2Error.GetMaximum(),0.2))    
     h2Error.DrawCopy("colz TEXT45")
 
     c2D.Print( pdfout )
@@ -401,6 +405,10 @@ def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
     for isyst in range(len(errorNames)):
         h2_isyst = diagnosticErrorPlot( effGraph, isyst, pdfout )
         h2_isyst.Write( errorNames[isyst],rt.TObject.kOverwrite)
+
+    h2Stat.Write('stat', rt.TObject.kOverwrite)
+    h2Sys.Write('sys', rt.TObject.kOverwrite)
+
     cDummy.Print( pdfout + "]" )
     rootout.Close()
 
