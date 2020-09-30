@@ -10,7 +10,10 @@ for option in main.args.configOpts.split(';'):
 
 
 # flag to be Tested
-flags = {'HNLprompt' : 'abs(el_dxy) < 0.05 && abs(el_dz) < 0.1 && el_relIso_fall17 < 0.1 && passingMVA94Xwp90noisoV2'}
+flags = {'HNLprompt' : 'abs(el_dxy) < 0.05 && abs(el_dz) < 0.1 && el_relIso_fall17 < 0.1 && passingMVA94Xwp90noisoV2',
+         'HNLprompt_noIP' : 'el_relIso_fall17 < 0.1 && passingMVA94Xwp90noisoV2',
+         'HNLprompt_noIso' : 'abs(el_dxy) < 0.05 && abs(el_dz) < 0.1 && passingMVA94Xwp90noisoV2',
+         'HNLprompt_noIPnoIso' : 'passingMVA94Xwp90noisoV2'}
 
 baseOutDir = '/user/tomc/public_html/leptonSF/HNLprompt/%s' % era
 
@@ -42,7 +45,7 @@ elif era=='2018':
       'data'   : getSample(['Run2018A', 'Run2018B', 'Run2018C', 'Run2018D'], rename='2018'),
       'mcNom'  : getSample(['2018_DY_NLO', '2018_DY_NLO_ext']),
       'mcAlt'  : getSample('2018_DY_LO'),
-      'tagSel' : getSample('2018_DY_NLO', rename='2018_DY_NLO_altTag'),
+      'tagSel' : getSample(['2018_DY_NLO', '2018_DY_NLO_ext'], rename='2018_DY_NLO_altTag'),
   }
 else:
   print 'Unknown era, please fix'
@@ -91,12 +94,18 @@ additionalCuts = {i : 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele
 #############################################################
 ########## fitting params to tune fit by hand if necessary
 #############################################################
-tnpParNomFit = [
+tnpParNomFit = {'default' : [
     "meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,5.0]",
     "meanF[-0.0,-5.0,5.0]","sigmaF[0.9,0.5,5.0]",
     "acmsP[60.,50.,80.]","betaP[0.05,0.01,0.08]","gammaP[0.1, -2, 2]","peakP[90.0]",
     "acmsF[60.,50.,80.]","betaF[0.05,0.01,0.08]","gammaF[0.1, -2, 2]","peakF[90.0]",
-    ]
+    ]}
+
+if era=='2016':
+  tnpParNomFit['bin58'] = ["meanP[-0.0,-5.0,5.0]","sigmaP[0.9,0.5,1.1]",
+                           "meanF[-0.0,-1.0,.1]","sigmaF[0.7,0.5,1.1]",
+                           "acmsP[60.,50.,90.]","betaP[0.05,0.01,0.9]","gammaP[0.1, -2, 2]","peakP[90.0]",
+                           "acmsF[60.,50.,90.]","betaF[0.05,0.01,0.9]","gammaF[0.1, -2, 2]","peakF[90.0]"]
 
 tnpParAltSigFit = [
     "meanP[-0.0,-5.0,5.0]","sigmaP[1,0.7,6.0]","alphaP[2.0,1.2,3.5]" ,'nP[3,-5,5]',"sigmaP_2[1.5,0.5,6.0]","sosP[1,0.5,5.0]",
