@@ -2,6 +2,7 @@ import math
 
 from libPython.logger import getLogger
 import copy
+
 log = getLogger()
 
 class efficiency:
@@ -262,7 +263,7 @@ class efficiencyList:
             htitle = 'e/#gamma uncertainties'
             hname  = 'h2_uncertaintiesEGamma'             
 
-        h2 = rt.TH2F(hname,htitle,xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
+        h2 = rt.TH2F(hname+str(onlyError),htitle,xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
 
         ## init histogram efficiencies and errors to 100%
         for ix in range(1,h2.GetXaxis().GetNbins()+1):
