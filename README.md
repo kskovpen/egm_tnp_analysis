@@ -1,12 +1,11 @@
 # egm_tnp_analysis
 
-
 ## Install stable branch
 
 ```
 git clone -b tom_branch  https://github.com/tomcornelis/egm_tnp_analysis
 cd egm_tnp_analysis
-source etc/scripts/setup.sh
+source etc/scripts/setup.sh (has to be done each time)
 make cython-build
 ```
 
