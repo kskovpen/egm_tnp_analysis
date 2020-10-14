@@ -13,6 +13,7 @@ parser.add_argument('--nominal', action='store_true', help = 'Do nominal fits')
 parser.add_argument('--sumUp', action='store_true', help = 'Create the final SF plots')
 parser.add_argument('--year', default=None, help = 'Only for specific era')
 parser.add_argument('--iBin', type = int, default=-1, help='bin number (to refit individual bin)')
+parser.add_argument('--wp', default='all', help = 'List of working points, e.g. VLoose,TightAnd3Charge')
 args = parser.parse_args()
 
 
@@ -48,8 +49,24 @@ def cream02(command, logFile):
 #
 # Settings
 #
+
 settings      = 'settings_leptonMva.py'
-workingpoints = ['passingLeptonMvaLoose', 'passingLeptonMvaVLoose', 'passingLeptonMvaTightAnd3Charge', 'passingLeptonMvaMediumAnd3Charge', 'passingLeptonMvaTightAnd3ChargeAndStuffWeCopiedFrom2015', 'passingLeptonMvaMediumAnd3ChargeAndStuffWeCopiedFrom2015']
+
+workingpoints = ['passingLeptonMvaLoose', \
+                 'passingLeptonMvaVLoose', \
+                 'passingLeptonMvaTightAnd3Charge', \
+                 'passingLeptonMvaMediumAnd3Charge', \
+                 'passingLeptonMvaTight', \
+                 'passingLeptonMvaMedium']
+
+if args.wp != 'all':
+    
+    print('Calibrate only', args.wp)
+    
+    wp = args.wp.split(',')
+    workingpoints = []
+    for w in wp: workingpoints.append('passingLeptonMva'+w)    
+    
 eras          = ['2016', '2017', '2018']
 
 
